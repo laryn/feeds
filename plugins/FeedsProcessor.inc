@@ -13,7 +13,7 @@ define('FEEDS_INSERT_NEW', 1);
 define('FEEDS_SKIP_EXISTING', 0);
 define('FEEDS_REPLACE_EXISTING', 1);
 define('FEEDS_UPDATE_EXISTING', 2);
-// Options for handling content in Drupal but not in source data.
+// Options for handling content in Backdrop but not in source data.
 define('FEEDS_SKIP_NON_EXISTENT', 'skip');
 define('FEEDS_DELETE_NON_EXISTENT', 'delete');
 
@@ -327,7 +327,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
       // Something bad happened, log it.
       catch (Exception $e) {
         $state->failed++;
-        drupal_set_message($e->getMessage(), 'warning');
+        backdrop_set_message($e->getMessage(), 'warning');
         list($message, $arguments) = $this->createLogEntry($e, $entity, $item);
         $source->log('import', $message, $arguments, WATCHDOG_ERROR);
       }
@@ -414,7 +414,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
       );
     }
     foreach ($messages as $message) {
-      drupal_set_message($message['message']);
+      backdrop_set_message($message['message']);
       $source->log('import', $message['message'], array(), isset($message['level']) ? $message['level'] : WATCHDOG_INFO);
     }
   }
@@ -531,10 +531,10 @@ abstract class FeedsProcessor extends FeedsPlugin {
           )
         );
         $source->log('clear', $message, array(), WATCHDOG_INFO);
-        drupal_set_message($message);
+        backdrop_set_message($message);
       }
       else {
-        drupal_set_message(t('There are no @entities to be deleted.', array('@entities' => $info['label plural'])));
+        backdrop_set_message(t('There are no @entities to be deleted.', array('@entities' => $info['label plural'])));
       }
     }
   }
@@ -648,7 +648,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
    *   The targets for this importer.
    */
   protected function getCachedTargets() {
-    $targets = &drupal_static('FeedsProcessor::getCachedTargets', array());
+    $targets = &backdrop_static('FeedsProcessor::getCachedTargets', array());
 
     if (!isset($targets[$this->id])) {
       $targets[$this->id] = $this->getMappingTargets();
@@ -664,7 +664,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
    *   The sources for this importer.
    */
   protected function getCachedSources() {
-    $sources = &drupal_static('FeedsProcessor::getCachedSources', array());
+    $sources = &backdrop_static('FeedsProcessor::getCachedSources', array());
 
     if (!isset($sources[$this->id])) {
 
@@ -930,7 +930,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
    * Get mappings.
    */
   public function getMappings() {
-    $cache = &drupal_static('FeedsProcessor::getMappings', array());
+    $cache = &backdrop_static('FeedsProcessor::getMappings', array());
 
     if (!isset($cache[$this->id])) {
       $mappings = $this->config['mappings'];
@@ -979,10 +979,10 @@ abstract class FeedsProcessor extends FeedsPlugin {
     // The bundle has not been selected.
     if (!$this->bundle()) {
       $info = $this->entityInfo();
-      $bundle_name = !empty($info['bundle name']) ? drupal_strtolower($info['bundle name']) : t('bundle');
+      $bundle_name = !empty($info['bundle name']) ? backdrop_strtolower($info['bundle name']) : t('bundle');
       $plugin_key = feeds_importer($this->id)->config['processor']['plugin_key'];
       $url = url('admin/structure/feeds/' . $this->id . '/settings/' . $plugin_key);
-      drupal_set_message(t('Please <a href="@url">select a @bundle_name</a>.', array('@url' => $url, '@bundle_name' => $bundle_name)), 'warning', FALSE);
+      backdrop_set_message(t('Please <a href="@url">select a @bundle_name</a>.', array('@url' => $url, '@bundle_name' => $bundle_name)), 'warning', FALSE);
     }
 
     return array(
@@ -1012,7 +1012,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
     $bundle = $this->bundle();
     $targets += module_invoke_all('feeds_processor_targets', $entity_type, $bundle);
 
-    drupal_alter('feeds_processor_targets', $targets, $entity_type, $bundle);
+    backdrop_alter('feeds_processor_targets', $targets, $entity_type, $bundle);
   }
 
   /**
@@ -1256,7 +1256,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
    *   The sanitized string representation of the object.
    */
   protected function exportObjectVars($object) {
-    include_once DRUPAL_ROOT . '/core/includes/utility.inc';
+    include_once BACKDROP_ROOT . '/core/includes/utility.inc';
 
     $out = is_array($object) ? $object : get_object_vars($object);
     $out = array_filter($out, 'is_scalar');
@@ -1268,10 +1268,10 @@ abstract class FeedsProcessor extends FeedsPlugin {
     }
 
     if (is_array($object)) {
-      return check_plain(drupal_var_export($out));
+      return check_plain(backdrop_var_export($out));
     }
 
-    return check_plain(drupal_var_export((object) $out));
+    return check_plain(backdrop_var_export((object) $out));
   }
 
   /**

@@ -32,7 +32,7 @@ class FeedsCSVParser extends FeedsParser {
       // Get first line and use it for column names, convert them to lower case.
       $header = $this->parseHeader($parser, $iterator);
       if (!$header) {
-        drupal_set_message(t('The CSV file is empty.'), 'warning', FALSE);
+        backdrop_set_message(t('The CSV file is empty.'), 'warning', FALSE);
         return new FeedsParserResult();
       }
       $parser->setColumnNames($header);
@@ -71,7 +71,7 @@ class FeedsCSVParser extends FeedsParser {
     }
     $header = array_shift($rows);
     foreach ($header as $i => $title) {
-      $header[$i] = trim(drupal_strtolower($title));
+      $header[$i] = trim(backdrop_strtolower($title));
     }
     return $header;
   }
@@ -102,14 +102,14 @@ class FeedsCSVParser extends FeedsParser {
    * Override parent::getSourceElement() to use only lower keys.
    */
   public function getSourceElement(FeedsSource $source, FeedsParserResult $result, $element_key) {
-    return parent::getSourceElement($source, $result, drupal_strtolower($element_key));
+    return parent::getSourceElement($source, $result, backdrop_strtolower($element_key));
   }
 
   /**
    * Override parent::getMappingSourceList() to use only lower keys.
    */
   public function getMappingSourceList() {
-    return array_map('drupal_strtolower', parent::getMappingSourceList());
+    return array_map('backdrop_strtolower', parent::getMappingSourceList());
   }
 
   /**
@@ -285,9 +285,9 @@ class FeedsCSVParser extends FeedsParser {
     $content_disposition = 'attachment; filename="' . $filename . '"';
     $content_type = "{$template_file_details['mime_type']}; charset=utf-8";
 
-    drupal_add_http_header('Cache-Control', $cache_control);
-    drupal_add_http_header('Content-Disposition', $content_disposition);
-    drupal_add_http_header('Content-type', $content_type);
+    backdrop_add_http_header('Cache-Control', $cache_control);
+    backdrop_add_http_header('Content-Disposition', $content_disposition);
+    backdrop_add_http_header('Content-type', $content_type);
 
     print implode($sep, $columns);
   }

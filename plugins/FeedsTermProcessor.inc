@@ -59,7 +59,7 @@ class FeedsTermProcessor extends FeedsProcessor {
   protected function entityValidate($term) {
     parent::entityValidate($term);
 
-    if (drupal_strlen($term->name) == 0) {
+    if (backdrop_strlen($term->name) == 0) {
       throw new FeedsValidationException(t('Term name missing.'));
     }
   }

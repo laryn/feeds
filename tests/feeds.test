@@ -8,7 +8,7 @@
 /**
  * Test basic Data API functionality.
  */
-class FeedsWebTestCase extends DrupalWebTestCase {
+class FeedsWebTestCase extends BackdropWebTestCase {
   protected $profile = 'testing';
 
   public function setUp() {
@@ -92,8 +92,8 @@ class FeedsWebTestCase extends DrupalWebTestCase {
     $permissions[] = 'administer filters';
 
     // Create an admin user and log in.
-    $this->admin_user = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($this->admin_user);
+    $this->admin_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($this->admin_user);
 
     $types = array(
       array(
@@ -110,13 +110,13 @@ class FeedsWebTestCase extends DrupalWebTestCase {
       ),
     );
     foreach ($types as $type) {
-      $this->drupalPost('admin/structure/types/add', $type, 'Save content type');
+      $this->backdropPost('admin/structure/types/add', $type, 'Save content type');
       $this->assertText("The content type " . $type['name'] . " has been added.");
     }
   }
 
   /**
-   * Absolute path to Drupal root.
+   * Absolute path to Backdrop root.
    */
   public function absolute() {
     return realpath(getcwd());
@@ -126,7 +126,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
    * Get the absolute directory path of the feeds module.
    */
   public function absolutePath() {
-    return  $this->absolute() . '/' . drupal_get_path('module', 'feeds');
+    return  $this->absolute() . '/' . backdrop_get_path('module', 'feeds');
   }
 
   /**
@@ -136,7 +136,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
    * to feeds included in this test.
    */
   public function generateOPML() {
-    $path = $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'feeds') . '/tests/feeds/';
+    $path = $GLOBALS['base_url'] . '/' . backdrop_get_path('module', 'feeds') . '/tests/feeds/';
 
   $output =
 '<?xml version="1.0" encoding="utf-8"?>
@@ -150,7 +150,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
   <outline text="Feeds test group" >
     <outline title="Development Seed - Technological Solutions for Progressive Organizations" text="" xmlUrl="' . $path . 'developmentseed.rss2" type="rss" />
     <outline title="Magyar Nemzet Online - H\'rek" text="" xmlUrl="' . $path . 'feed_without_guid.rss2" type="rss" />
-    <outline title="Drupal planet" text="" type="rss" xmlUrl="' . $path . 'drupalplanet.rss2" />
+    <outline title="Backdrop planet" text="" type="rss" xmlUrl="' . $path . 'backdropplanet.rss2" />
   </outline>
 </body>
 </opml>';
@@ -176,13 +176,13 @@ class FeedsWebTestCase extends DrupalWebTestCase {
    */
   public function createImporterConfiguration($name = 'Syndication', $id = 'syndication') {
     // Create new feed configuration.
-    $this->drupalGet('admin/structure/feeds');
+    $this->backdropGet('admin/structure/feeds');
     $this->clickLink('Add importer');
     $edit = array(
       'name' => $name,
       'id' => $id,
     );
-    $this->drupalPost('admin/structure/feeds/create', $edit, 'Create');
+    $this->backdropPost('admin/structure/feeds/create', $edit, 'Create');
 
     // Assert message and presence of default plugins.
     $this->assertText('Your configuration has been created with default settings.');
@@ -207,7 +207,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
       $edit = array(
         'plugin_key' => $plugin_key,
       );
-      $this->drupalPost("admin/structure/feeds/$id/$type", $edit, 'Save');
+      $this->backdropPost("admin/structure/feeds/$id/$type", $edit, 'Save');
 
       // Assert actual configuration.
       $config = unserialize(db_query("SELECT config FROM {feeds_importer} WHERE id = :id", array(':id' => $id))->fetchField());
@@ -226,7 +226,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
    *   The settings to set.
    */
   public function setSettings($id, $plugin, $settings) {
-    $this->drupalPost('admin/structure/feeds/' . $id . '/settings/' . $plugin, $settings, 'Save');
+    $this->backdropPost('admin/structure/feeds/' . $id . '/settings/' . $plugin, $settings, 'Save');
     $this->assertText('Your changes have been saved.');
   }
 
@@ -244,7 +244,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
    */
   public function createFeedNode($id = 'syndication', $feed_url = NULL, $title = '', $content_type = NULL) {
     if (empty($feed_url)) {
-      $feed_url = $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'feeds') . '/tests/feeds/developmentseed.rss2';
+      $feed_url = $GLOBALS['base_url'] . '/' . backdrop_get_path('module', 'feeds') . '/tests/feeds/developmentseed.rss2';
     }
 
     // If content type not given, retrieve it.
@@ -263,7 +263,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
       'title' => $title,
       'feeds[FeedsHTTPFetcher][source]' => $feed_url,
     );
-    $this->drupalPost('node/add/' . str_replace('_', '-', $content_type), $edit, 'Save');
+    $this->backdropPost('node/add/' . str_replace('_', '-', $content_type), $edit, 'Save');
     $this->assertText('has been created.');
 
     // Get the node id from URL.
@@ -303,7 +303,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
       'feeds[FeedsHTTPFetcher][source]' => $feed_url,
     );
     // Check that the update was saved.
-    $this->drupalPost('node/' . $nid . '/edit', $edit, 'Save');
+    $this->backdropPost('node/' . $nid . '/edit', $edit, 'Save');
     $this->assertText('has been updated.');
 
     // Check that the URL was updated in the feeds_source table.
@@ -332,12 +332,12 @@ class FeedsWebTestCase extends DrupalWebTestCase {
    */
   public function importURL($id, $feed_url = NULL) {
     if (empty($feed_url)) {
-      $feed_url = $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'feeds') . '/tests/feeds/developmentseed.rss2';
+      $feed_url = $GLOBALS['base_url'] . '/' . backdrop_get_path('module', 'feeds') . '/tests/feeds/developmentseed.rss2';
     }
     $edit = array(
       'feeds[FeedsHTTPFetcher][source]' => $feed_url,
     );
-    $nid = $this->drupalPost('import/' . $id, $edit, 'Import');
+    $nid = $this->backdropPost('import/' . $id, $edit, 'Import');
 
     // Check whether feed got recorded in feeds_source table.
     $this->assertEqual(1, db_query("SELECT COUNT(*) FROM {feeds_source} WHERE id = :id AND feed_nid = 0", array(':id' => $id))->fetchField());
@@ -365,7 +365,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
     $edit = array(
       'files[feeds]' => $file,
     );
-    $this->drupalPost('import/' . $id, $edit, 'Import');
+    $this->backdropPost('import/' . $id, $edit, 'Import');
   }
 
   /**
@@ -386,7 +386,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Overrides DrupalWebTestCase::assertFieldByXPath().
+   * Overrides BackdropWebTestCase::assertFieldByXPath().
    *
    * The core version has a bug, this is the D8 version.
    *
@@ -452,26 +452,26 @@ class FeedsWebTestCase extends DrupalWebTestCase {
         $this->assertEqual($current_mapping_key, -1, 'Mapping does not exist before addition.');
       }
 
-      // Get unique flag and unset it. Otherwise, drupalPost will complain that
+      // Get unique flag and unset it. Otherwise, backdropPost will complain that
       // Split up config and mapping.
       $config = $mapping;
       unset($config['source'], $config['target']);
       $mapping = array('source' => $mapping['source'], 'target' => $mapping['target']);
 
       // Add mapping.
-      $this->drupalPost($path, $mapping, t('Save'));
+      $this->backdropPost($path, $mapping, t('Save'));
 
       // If there are other configuration options, set them.
       if ($config) {
-        $this->drupalPostAJAX(NULL, array(), 'mapping_settings_edit_' . $i);
+        $this->backdropPostAJAX(NULL, array(), 'mapping_settings_edit_' . $i);
 
         // Set some settings.
         $edit = array();
         foreach ($config as $key => $value) {
           $edit["config[$i][settings][$key]"] = $value;
         }
-        $this->drupalPostAJAX(NULL, $edit, 'mapping_settings_update_' . $i);
-        $this->drupalPost(NULL, array(), t('Save'));
+        $this->backdropPostAJAX(NULL, $edit, 'mapping_settings_update_' . $i);
+        $this->backdropPost(NULL, array(), t('Save'));
       }
 
       if ($test_mappings) {
@@ -508,7 +508,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
       $edit["remove_flags[$i]"] = 1;
     }
 
-    $this->drupalPost($path, $edit, t('Save'));
+    $this->backdropPost($path, $edit, t('Save'));
     $this->assertText('Your changes have been saved.');
   }
 
@@ -604,15 +604,15 @@ class FeedsWebTestCase extends DrupalWebTestCase {
     $filename = 'simplepie.mini.php';
 
     // Avoid downloading the file dozens of times
-    $library_dir = DRUPAL_ROOT . '/' . $this->originalFileDirectory . '/simpletest/feeds';
+    $library_dir = BACKDROP_ROOT . '/' . $this->originalFileDirectory . '/simpletest/feeds';
     $simplepie_library_dir = $library_dir . '/simplepie';
 
     if (!file_exists($library_dir)) {
-      drupal_mkdir($library_dir);
+      backdrop_mkdir($library_dir);
     }
 
     if (!file_exists($simplepie_library_dir)) {
-      drupal_mkdir($simplepie_library_dir);
+      backdrop_mkdir($simplepie_library_dir);
     }
 
     // Local file name.
@@ -643,15 +643,15 @@ class FeedsWebTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Provides a wrapper for DrupalUnitTestCase for Feeds unit testing.
+ * Provides a wrapper for BackdropUnitTestCase for Feeds unit testing.
  */
-class FeedsUnitTestHelper extends DrupalUnitTestCase {
+class FeedsUnitTestHelper extends BackdropUnitTestCase {
   public function setUp() {
     parent::setUp();
 
     // Manually include the feeds module.
     // @todo Allow an array of modules from the child class.
-    drupal_load('module', 'feeds');
+    backdrop_load('module', 'feeds');
   }
 }
 

@@ -7,7 +7,7 @@
  *
  * @todo Restructure. OO could work wonders here.
  * @todo Write unit tests.
- * @todo Keep in Feeds project or host on Drupal?
+ * @todo Keep in Feeds project or host on Backdrop?
  */
 
 /**

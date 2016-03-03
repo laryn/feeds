@@ -31,7 +31,7 @@ class FeedsMapperDateTestCase extends FeedsMapperTestCase {
    * Basic test loading a single entry CSV file.
    */
   public function test() {
-    $this->drupalGet('admin/config/regional/settings');
+    $this->backdropGet('admin/config/regional/settings');
 
     // Create content type.
     $typename = $this->createContentType(array(), array(
@@ -46,15 +46,15 @@ class FeedsMapperDateTestCase extends FeedsMapperTestCase {
       $edit = array(
         'widget_type' => 'date_select',
       );
-      $this->drupalPost('admin/structure/types/manage/' . $typename . '/fields/' . $field . '/widget-type', $edit, 'Continue');
+      $this->backdropPost('admin/structure/types/manage/' . $typename . '/fields/' . $field . '/widget-type', $edit, 'Continue');
       $edit = array(
         'instance[widget][settings][increment]' => 1,
       );
-      $this->drupalPost('admin/structure/types/manage/' . $typename . '/fields/' . $field, $edit, 'Save settings');
+      $this->backdropPost('admin/structure/types/manage/' . $typename . '/fields/' . $field, $edit, 'Save settings');
       $edit = array(
         'widget_type' => 'date_text',
       );
-      $this->drupalPost('admin/structure/types/manage/' . $typename . '/fields/' . $field . '/widget-type', $edit, 'Continue');
+      $this->backdropPost('admin/structure/types/manage/' . $typename . '/fields/' . $field . '/widget-type', $edit, 'Continue');
     }
 
     // Create and configure importer.
@@ -89,7 +89,7 @@ class FeedsMapperDateTestCase extends FeedsMapperTestCase {
     $edit = array(
       'allowed_extensions' => 'rss2',
     );
-    $this->drupalPost('admin/structure/feeds/daterss/settings/FeedsFileFetcher', $edit, 'Save');
+    $this->backdropPost('admin/structure/feeds/daterss/settings/FeedsFileFetcher', $edit, 'Save');
 
     // Import CSV file.
     $this->importFile('daterss', $this->absolutePath() . '/tests/feeds/googlenewstz.rss2');
@@ -105,7 +105,7 @@ class FeedsMapperDateTestCase extends FeedsMapperTestCase {
       '01/07/2010 - 00:26',
     );
     for ($i = 1; $i <= 6; $i++) {
-      $this->drupalGet("node/$i/edit");
+      $this->backdropGet("node/$i/edit");
       $this->assertNodeFieldValue('date', $values[$i-1]);
       $this->assertNodeFieldValue('datestamp', $values[$i-1]);
     }
@@ -137,16 +137,16 @@ class FeedsMapperDateTestCase extends FeedsMapperTestCase {
       $edit = array(
         'widget_type' => 'date_select',
       );
-      $this->drupalPost('admin/structure/types/manage/' . $typename . '/fields/' . $field . '/widget-type', $edit, 'Continue');
+      $this->backdropPost('admin/structure/types/manage/' . $typename . '/fields/' . $field . '/widget-type', $edit, 'Continue');
       $edit = array(
         'instance[widget][settings][increment]' => 1,
         'field[settings][enddate_get]' => 1,
       );
-      $this->drupalPost('admin/structure/types/manage/' . $typename . '/fields/' . $field, $edit, 'Save settings');
+      $this->backdropPost('admin/structure/types/manage/' . $typename . '/fields/' . $field, $edit, 'Save settings');
       $edit = array(
         'widget_type' => 'date_text',
       );
-      $this->drupalPost('admin/structure/types/manage/' . $typename . '/fields/' . $field . '/widget-type', $edit, 'Continue');
+      $this->backdropPost('admin/structure/types/manage/' . $typename . '/fields/' . $field . '/widget-type', $edit, 'Continue');
     }
 
     // Create and configure importer.
@@ -209,7 +209,7 @@ class FeedsMapperDateTestCase extends FeedsMapperTestCase {
       ),
     );
     for ($i = 1; $i <= 2; $i++) {
-      $this->drupalGet("node/$i/edit");
+      $this->backdropGet("node/$i/edit");
       $this->assertNodeFieldValue('date', $date_values[$i]['created']);
       $this->assertFieldByName('field_date[und][0][value2][date]', $date_values[$i]['end']);
       $this->assertNodeFieldValue('datestamp', $date_values[$i]['created']);
@@ -224,14 +224,14 @@ class FeedsMapperDateTestCase extends FeedsMapperTestCase {
 
     // Check if all values were cleared out for both nodes.
     for ($i = 1; $i <= 2; $i++) {
-      $this->drupalGet("node/$i/edit");
+      $this->backdropGet("node/$i/edit");
       $this->assertNoNodeFieldValue('date', $date_values[$i]['created']);
       $this->assertNoFieldByName('field_date[und][0][value2][date]', $date_values[$i]['end']);
       $this->assertNoNodeFieldValue('datestamp', $date_values[$i]['created']);
       $this->assertNoFieldByName('field_datestamp[und][0][value2][date]', $date_values[$i]['end']);
       $this->assertNoNodeFieldValue('datetime', $date_values[$i]['created']);
       $this->assertNoFieldByName('field_datetime[und][0][value2][date]', $date_values[$i]['end']);
-      $this->drupalGet("node/$i");
+      $this->backdropGet("node/$i");
       $this->assertNoText('date_label');
       $this->assertNoText('datestamp_label');
       $this->assertNoText('datetime_label');
@@ -241,7 +241,7 @@ class FeedsMapperDateTestCase extends FeedsMapperTestCase {
     $this->importFile('csv', $this->absolutePath() . '/tests/feeds/content_date.csv');
     $this->assertText('Updated 2 nodes');
     for ($i = 1; $i <= 2; $i++) {
-      $this->drupalGet("node/$i/edit");
+      $this->backdropGet("node/$i/edit");
       $this->assertNodeFieldValue('date', $date_values[$i]['created']);
       $this->assertFieldByName('field_date[und][0][value2][date]', $date_values[$i]['end']);
       $this->assertNodeFieldValue('datestamp', $date_values[$i]['created']);
@@ -255,7 +255,7 @@ class FeedsMapperDateTestCase extends FeedsMapperTestCase {
     $this->assertText('Updated 2 nodes');
 
     // Check if all values were cleared out for node 1.
-    $this->drupalGet('node/1/edit');
+    $this->backdropGet('node/1/edit');
     $this->assertNoNodeFieldValue('date', $date_values[1]['created']);
     $this->assertNoFieldByName('field_date[und][0][value2][date]', $date_values[1]['end']);
     $this->assertNoNodeFieldValue('datestamp', $date_values[1]['created']);
@@ -263,7 +263,7 @@ class FeedsMapperDateTestCase extends FeedsMapperTestCase {
     $this->assertNoNodeFieldValue('datetime', $date_values[1]['created']);
     $this->assertNoFieldByName('field_datetime[und][0][value2][date]', $date_values[1]['end']);
     // Check if labels for fields that should be cleared out are not shown.
-    $this->drupalGet('node/1');
+    $this->backdropGet('node/1');
     $this->assertNoText('date_label');
     $this->assertNoText('datestamp_label');
     $this->assertNoText('datetime_label');

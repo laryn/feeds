@@ -89,8 +89,8 @@ class FeedsUserProcessor extends FeedsProcessor {
         'module' => 'openid',
         'authname' => $account->openid,
       );
-      if (SAVED_UPDATED != drupal_write_record('authmap', $authmap, array('uid', 'module'))) {
-        drupal_write_record('authmap', $authmap);
+      if (SAVED_UPDATED != backdrop_write_record('authmap', $authmap, array('uid', 'module'))) {
+        backdrop_write_record('authmap', $authmap);
       }
     }
   }

@@ -55,7 +55,7 @@ class FeedsSyndicationParserTestCase extends FeedsWebTestCase {
    * Return an array of test feeds.
    */
   protected function feedUrls() {
-    $path = $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'feeds') . '/tests/feeds/';
+    $path = $GLOBALS['base_url'] . '/' . backdrop_get_path('module', 'feeds') . '/tests/feeds/';
     return array(
       "{$path}developmentseed.rss2" => array(
         'item_count' => 10,

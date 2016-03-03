@@ -11,7 +11,7 @@
 function feeds_feeds_processor_targets($entity_type, $bundle) {
   // Record that we've been called.
   // @see _feeds_feeds_processor_targets_alter()
-  $called = &drupal_static('feeds_feeds_processor_targets', FALSE);
+  $called = &backdrop_static('feeds_feeds_processor_targets', FALSE);
   $called = TRUE;
 
   return array();
@@ -27,7 +27,7 @@ function feeds_feeds_processor_targets_alter(array &$targets, $entity_type, $bun
   // Since a hook can be invoked multiple times during a request, reset the
   // "feeds_feeds_processor_targets" variable.
   // @see _feeds_feeds_processor_targets_alter()
-  drupal_static_reset('feeds_feeds_processor_targets');
+  backdrop_static_reset('feeds_feeds_processor_targets');
 }
 
 /**

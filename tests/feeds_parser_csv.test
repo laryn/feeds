@@ -32,7 +32,7 @@ class FeedsCSVParserTestCase extends FeedsWebTestCase {
     config_set('feeds.settings', 'feeds_tests_feeds_after_parse_empty_items', TRUE);
 
     // Create node type.
-    $node_type = $this->drupalCreateContentType();
+    $node_type = $this->backdropCreateContentType();
 
     // Create and configure importer.
     $this->createImporterConfiguration('Content CSV', 'csv');
@@ -52,7 +52,7 @@ class FeedsCSVParserTestCase extends FeedsWebTestCase {
 
     // Ensure that on the CSV parser settings page a message is shown about that
     // the mbstring extension is not available.
-    $this->drupalGet('admin/structure/feeds/csv/settings/FeedsCSVParser');
+    $this->backdropGet('admin/structure/feeds/csv/settings/FeedsCSVParser');
     $this->assertNoField('encoding');
     $this->assertText('PHP mbstring extension must be available for character encoding conversion.');
 
@@ -67,7 +67,7 @@ class FeedsCSVParserTestCase extends FeedsWebTestCase {
    */
   public function testEncodingFailure() {
     // Create node type.
-    $node_type = $this->drupalCreateContentType();
+    $node_type = $this->backdropCreateContentType();
 
     // Create and configure importer.
     $this->createImporterConfiguration('Content CSV', 'csv');
@@ -87,7 +87,7 @@ class FeedsCSVParserTestCase extends FeedsWebTestCase {
 
     // Ensure that on the CSV parser settings page a setting for encoding is
     // shown.
-    $this->drupalGet('admin/structure/feeds/csv/settings/FeedsCSVParser');
+    $this->backdropGet('admin/structure/feeds/csv/settings/FeedsCSVParser');
     $this->assertField('encoding');
     $this->assertNoText('PHP mbstring extension must be available for character encoding conversion.');
 

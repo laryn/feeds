@@ -39,7 +39,7 @@ class FeedsExamplesNodeTestCase extends FeedsWebTestCase {
     $this->assertRaw('feeds/nodes.csv');
 
     // Assert created nodes.
-    $this->drupalGet('node');
+    $this->backdropGet('node');
     $this->assertText('Typi non habent');
     $this->assertText('Eodem modo typi');
     $this->assertText('Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum.');
@@ -68,16 +68,16 @@ class FeedsExamplesNodeTestCase extends FeedsWebTestCase {
       // Import again. Feeds only updates items that haven't changed. However,
       // there are 2 different items with the same GUID in nodes.csv.
       // Therefore, feeds will show updates to 2 nodes.
-      $this->drupalPost('import/node/import', array(), 'Import');
+      $this->backdropPost('import/node/import', array(), 'Import');
       $this->assertText('Updated 2 nodes');
     }
 
     // Remove all nodes.
-    $this->drupalPost('import/node/delete-items', array(), 'Delete');
+    $this->backdropPost('import/node/delete-items', array(), 'Delete');
     $this->assertText('Deleted 8 nodes');
 
     // Import once again.
-    $this->drupalPost('import/node/import', array(), 'Import');
+    $this->backdropPost('import/node/import', array(), 'Import');
     $this->assertText('Created 8 nodes');
 
     // Import a similar file with changes in 4 records. Feeds should report 6
@@ -91,21 +91,21 @@ class FeedsExamplesNodeTestCase extends FeedsWebTestCase {
     $this->assertText('Created 71 nodes');
 
     // Remove all nodes.
-    $this->drupalPost('import/node/delete-items', array(), 'Delete');
+    $this->backdropPost('import/node/delete-items', array(), 'Delete');
     $this->assertText('Deleted 79 nodes');
 
     // Import once again.
-    $this->drupalPost('import/node/import', array(), 'Import');
+    $this->backdropPost('import/node/import', array(), 'Import');
     $this->assertText('Created 79 nodes');
     $this->assertText('Updated 7 nodes');
 
     // Import a tab separated file.
-    $this->drupalPost('import/node/delete-items', array(), 'Delete');
+    $this->backdropPost('import/node/delete-items', array(), 'Delete');
     $edit = array(
       'files[feeds]' => $this->absolutePath() . '/tests/feeds/nodes.tsv',
       'feeds[FeedsCSVParser][delimiter]' => "TAB",
     );
-    $this->drupalPost('import/node', $edit, 'Import');
+    $this->backdropPost('import/node', $edit, 'Import');
     $this->assertText('Created 8 nodes');
   }
 }
@@ -137,7 +137,7 @@ class FeedsExamplesUserTestCase extends FeedsWebTestCase {
     $this->assertText('Created 3 users');
     // 1 user has an invalid email address.
     $this->assertText('Failed importing 2 users');
-    $this->drupalGet('admin/people');
+    $this->backdropGet('admin/people');
     $this->assertText('Morticia');
     $this->assertText('Fester');
     $this->assertText('Gomez');

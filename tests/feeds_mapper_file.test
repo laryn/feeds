@@ -30,7 +30,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
     // generate a 404 for this feel url provided by feeds_tests. However, if
     // feeds_tests was enabled in your site before running the test, it will
     // work fine. Since it is truly screwy, lets just force it to use
-    // drupal_http_request for this test case.
+    // backdrop_http_request for this test case.
     config_set('feeds.settings', 'feeds_never_use_curl', TRUE);
 
     // Only download simplepie if the plugin doesn't already exist somewhere.
@@ -79,7 +79,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
       ->condition('id', 'syndication')
       ->execute();
     foreach ($entities as $entity) {
-      $this->drupalGet('node/' . $entity->entity_id . '/edit');
+      $this->backdropGet('node/' . $entity->entity_id . '/edit');
       $this->assertText(str_replace(' ', '_', array_shift($files)));
     }
 
@@ -92,7 +92,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
     $edit = array(
       'instance[settings][file_directory]' => 'resources',
     );
-    $this->drupalPost('admin/structure/types/manage/' . $typename . '/fields/field_files', $edit, t('Save settings'));
+    $this->backdropPost('admin/structure/types/manage/' . $typename . '/fields/field_files', $edit, t('Save settings'));
 
     // Create a CSV importer configuration.
     $this->createImporterConfiguration('Node import from CSV', 'node');
@@ -114,7 +114,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
     $edit = array(
       'feeds[FeedsHTTPFetcher][source]' => url('testing/feeds/files.csv', array('absolute' => TRUE)),
     );
-    $this->drupalPost('import/node', $edit, 'Import');
+    $this->backdropPost('import/node', $edit, 'Import');
     $this->assertText('Created 5 nodes');
 
     // Assert: files should be in resources/.
@@ -125,22 +125,22 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
       ->execute();
 
     foreach ($entities as $entity) {
-      $this->drupalGet('node/' . $entity->entity_id . '/edit');
+      $this->backdropGet('node/' . $entity->entity_id . '/edit');
       $this->assertRaw('resources/' . rawurlencode(array_shift($files)));
     }
 
     // 3) Test mapping of local resources, this time leave files in place.
-    $this->drupalPost('import/node/delete-items', array(), 'Delete');
+    $this->backdropPost('import/node/delete-items', array(), 'Delete');
     // Setting the fields file directory to images will make copying files
     // obsolete.
     $edit = array(
       'instance[settings][file_directory]' => 'images',
     );
-    $this->drupalPost('admin/structure/types/manage/' . $typename . '/fields/field_files', $edit, t('Save settings'));
+    $this->backdropPost('admin/structure/types/manage/' . $typename . '/fields/field_files', $edit, t('Save settings'));
     $edit = array(
       'feeds[FeedsHTTPFetcher][source]' => $GLOBALS['base_url'] . '/testing/feeds/files.csv',
     );
-    $this->drupalPost('import/node', $edit, 'Import');
+    $this->backdropPost('import/node', $edit, 'Import');
     $this->assertText('Created 5 nodes');
 
     // Assert: files should be in images/ now.
@@ -151,12 +151,12 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
       ->execute();
 
     foreach ($entities as $entity) {
-      $this->drupalGet('node/' . $entity->entity_id . '/edit');
+      $this->backdropGet('node/' . $entity->entity_id . '/edit');
       $this->assertRaw('images/' . rawurlencode(array_shift($files)));
     }
 
     // Deleting all imported items will delete the files from the images/ dir.
-    $this->drupalPost('import/node/delete-items', array(), 'Delete');
+    $this->backdropPost('import/node/delete-items', array(), 'Delete');
     foreach ($this->listTestFiles() as $file) {
       $this->assertFalse(is_file("public://images/$file"));
     }
@@ -175,7 +175,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
       'instance[settings][alt_field]' => 1,
       'instance[settings][title_field]' => 1,
     );
-    $this->drupalPost("admin/structure/types/manage/$typename/fields/field_images", $edit, t('Save settings'));
+    $this->backdropPost("admin/structure/types/manage/$typename/fields/field_images", $edit, t('Save settings'));
 
     // Create a CSV importer configuration.
     $this->createImporterConfiguration('Node import from CSV', 'image_test');
@@ -205,7 +205,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
     $edit = array(
       'feeds[FeedsHTTPFetcher][source]' => url('testing/feeds/files-remote.csv', array('absolute' => TRUE)),
     );
-    $this->drupalPost('import/image_test', $edit, 'Import');
+    $this->backdropPost('import/image_test', $edit, 'Import');
     $this->assertText('Created 5 nodes');
 
     // Assert files exist.
@@ -216,7 +216,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
       ->execute();
 
     foreach ($entities as $i => $entity) {
-      $this->drupalGet('node/' . $entity->entity_id . '/edit');
+      $this->backdropGet('node/' . $entity->entity_id . '/edit');
       $this->assertRaw(str_replace(' ', '_', array_shift($files)));
       $this->assertRaw("Alt text $i");
       $this->assertRaw("Title text $i");
@@ -255,7 +255,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
     $edit = array(
       'feeds[FeedsHTTPFetcher][source]' => url('testing/feeds/files-remote.csv', array('absolute' => TRUE)),
     );
-    $this->drupalPost('import/invalid_extension', $edit, 'Import');
+    $this->backdropPost('import/invalid_extension', $edit, 'Import');
     $this->assertText('Created 5 nodes');
 
     foreach (range(1, 5) as $nid) {
@@ -294,7 +294,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
       'instance[settings][alt_field]' => 1,
       'instance[settings][title_field]' => 1,
     );
-    $this->drupalPost("admin/structure/types/manage/$typename/fields/field_images", $edit, t('Save settings'));
+    $this->backdropPost("admin/structure/types/manage/$typename/fields/field_images", $edit, t('Save settings'));
 
     // Create and configure importer.
     $this->createImporterConfiguration('Content CSV', 'csv');
@@ -335,13 +335,13 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
     $edit = array(
       'feeds[FeedsHTTPFetcher][source]' => url('testing/feeds/files-remote.csv', array('absolute' => TRUE)),
     );
-    $this->drupalPost('import/csv', $edit, 'Import');
+    $this->backdropPost('import/csv', $edit, 'Import');
     $this->assertText('Created 5 nodes');
 
     // Assert files exist.
     $files = $this->listTestFiles();
     foreach ($files as $file) {
-      $file_path = drupal_realpath('public://') . '/' . str_replace(' ', '_', $file);
+      $file_path = backdrop_realpath('public://') . '/' . str_replace(' ', '_', $file);
       $this->assertTrue(file_exists($file_path), format_string('The file %file exists.', array(
         '%file' => $file_path,
       )));
@@ -355,7 +355,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
       ->fetchAll();
 
     foreach ($entities as $i => $entity) {
-      $this->drupalGet('node/' . $entity->entity_id . '/edit');
+      $this->backdropGet('node/' . $entity->entity_id . '/edit');
       $this->assertRaw(str_replace(' ', '_', array_shift($files)));
       $this->assertRaw("Alt text $i");
       $this->assertRaw("Title text $i");
@@ -365,12 +365,12 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
     $edit = array(
       'feeds[FeedsHTTPFetcher][source]' => url('testing/feeds/files-empty-alt-title.csv', array('absolute' => TRUE)),
     );
-    $this->drupalPost('import/csv', $edit, 'Import');
+    $this->backdropPost('import/csv', $edit, 'Import');
     $this->assertText('Updated 5 nodes');
 
     $files = $this->listTestFiles();
     foreach ($entities as $i => $entity) {
-      $this->drupalGet('node/' . $entity->entity_id . '/edit');
+      $this->backdropGet('node/' . $entity->entity_id . '/edit');
       $this->assertRaw(str_replace(' ', '_', array_shift($files)));
       $this->assertNoRaw("Alt text $i");
       $this->assertNoRaw("Title text $i");
@@ -380,20 +380,20 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
     $edit = array(
       'feeds[FeedsHTTPFetcher][source]' => url('testing/feeds/files-empty.csv', array('absolute' => TRUE)),
     );
-    $this->drupalPost('import/csv', $edit, 'Import');
+    $this->backdropPost('import/csv', $edit, 'Import');
     $this->assertText('Updated 5 nodes');
 
     // Assert files are removed.
     $files = $this->listTestFiles();
     foreach ($files as $file) {
-      $file_path = drupal_realpath('public://') . '/' . str_replace(' ', '_', $file);
+      $file_path = backdrop_realpath('public://') . '/' . str_replace(' ', '_', $file);
       $this->assertFalse(file_exists($file_path), format_string('The file %file no longer exists.', array(
         '%file' => $file_path,
       )));
     }
     // Check if the files are removed from the node edit form as well.
     foreach ($entities as $i => $entity) {
-      $this->drupalGet('node/' . $entity->entity_id . '/edit');
+      $this->backdropGet('node/' . $entity->entity_id . '/edit');
       $this->assertNoRaw(str_replace(' ', '_', array_shift($files)));
     }
   }

@@ -221,7 +221,7 @@ class PuSHSubscriber {
 
     header('HTTP/1.1 200 "Found"', NULL, 200);
     print check_plain($_GET['hub_challenge']);
-    drupal_exit();
+    backdrop_exit();
   }
 
   /**
@@ -241,7 +241,7 @@ class PuSHSubscriber {
    * @todo Make concurrency safe.
    */
   protected function request($hub, $topic, $mode, $callback_url) {
-    $secret = drupal_random_key(40);
+    $secret = backdrop_random_key(40);
     $post_fields = array(
       'hub.callback' => $callback_url,
       'hub.mode' => $mode,
@@ -313,7 +313,7 @@ class PuSHSubscriber {
   protected function rejectRequest() {
     header('HTTP/1.1 404 "Not Found"', NULL, 404);
     $this->log('Could not verify subscription.', 'error');
-    drupal_exit();
+    backdrop_exit();
   }
 
 }

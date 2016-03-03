@@ -120,7 +120,7 @@ class FeedsMapperLinkTestCase extends FeedsMapperTestCase {
     $this->assertText('Created 10 nodes');
 
     // Edit the imported node.
-    $this->drupalGet('node/2/edit');
+    $this->backdropGet('node/2/edit');
 
     $url = 'http://developmentseed.org/blog/2009/oct/06/open-atrium-translation-workflow-two-way-updating';
     $title = 'Open Atrium Translation Workflow: Two Way Translation Updates';
@@ -130,7 +130,7 @@ class FeedsMapperLinkTestCase extends FeedsMapperTestCase {
     $this->assertNodeFieldValue('omega', array('url' => $url, 'static' => $this->staticTitle));
 
     // Test the static title.
-    $this->drupalGet('node/2');
+    $this->backdropGet('node/2');
     $this->assertText($this->staticTitle, 'Static title link found.');
   }
 
@@ -212,7 +212,7 @@ class FeedsMapperLinkTestCase extends FeedsMapperTestCase {
     );
 
     for ($i = 1; $i <= 2; $i++) {
-      $this->drupalGet("node/$i/edit");
+      $this->backdropGet("node/$i/edit");
       $this->assertNodeFieldValue('alpha', array(
         'url' => $link_values[$i]['url'],
         'title' => $link_values[$i]['title'],
@@ -229,7 +229,7 @@ class FeedsMapperLinkTestCase extends FeedsMapperTestCase {
       ));
 
       // Test static title.
-      $this->drupalGet("node/$i");
+      $this->backdropGet("node/$i");
       $this->assertText($this->staticTitle, 'Static title link found.');
     }
 
@@ -239,7 +239,7 @@ class FeedsMapperLinkTestCase extends FeedsMapperTestCase {
 
     // Check if all values were cleared out for both nodes.
     for ($i = 1; $i <= 2; $i++) {
-      $this->drupalGet("node/$i/edit");
+      $this->backdropGet("node/$i/edit");
       $this->assertNoNodeFieldValue('alpha', array(
         'url' => $link_values[$i]['url'],
         'title' => $link_values[$i]['title'],
@@ -255,7 +255,7 @@ class FeedsMapperLinkTestCase extends FeedsMapperTestCase {
         'url' => $link_values[$i]['url'],
       ));
       // Check labels.
-      $this->drupalGet('node/' . $i);
+      $this->backdropGet('node/' . $i);
       $this->assertNoText('alpha_link_field_label');
       $this->assertNoText('beta_link_field_label');
       $this->assertNoText('gamma_link_field_label');
@@ -269,7 +269,7 @@ class FeedsMapperLinkTestCase extends FeedsMapperTestCase {
     $this->importFile('csv', $this->absolutePath() . '/tests/feeds/content_link.csv');
     $this->assertText('Updated 2 nodes');
     for ($i = 1; $i <= 2; $i++) {
-      $this->drupalGet("node/$i/edit");
+      $this->backdropGet("node/$i/edit");
       $this->assertNodeFieldValue('alpha', array(
         'url' => $link_values[$i]['url'],
         'title' => $link_values[$i]['title'],
@@ -291,7 +291,7 @@ class FeedsMapperLinkTestCase extends FeedsMapperTestCase {
     $this->assertText('Updated 2 nodes');
 
     // Check if all values were cleared out for node 1.
-    $this->drupalGet("node/1/edit");
+    $this->backdropGet("node/1/edit");
     $this->assertNoNodeFieldValue('alpha', array(
       'url' => $link_values[1]['url'],
       'title' => $link_values[1]['title'],
@@ -306,7 +306,7 @@ class FeedsMapperLinkTestCase extends FeedsMapperTestCase {
     $this->assertNoNodeFieldValue('omega', array(
       'url' => $link_values[1]['url'],
     ));
-    $this->drupalGet('node/1');
+    $this->backdropGet('node/1');
     $this->assertNoText('alpha_link_field_label');
     $this->assertNoText('beta_link_field_label');
     $this->assertNoText('gamma_link_field_label');

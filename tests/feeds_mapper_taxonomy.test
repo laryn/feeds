@@ -26,12 +26,12 @@ class FeedsMapperTaxonomyTestCase extends FeedsMapperTestCase {
       'name' => 'Tags',
       'machine_name' => 'tags',
     );
-    $this->drupalPost('admin/structure/taxonomy/add', $edit, 'Save');
+    $this->backdropPost('admin/structure/taxonomy/add', $edit, 'Save');
 
     $edit = array(
         'name' => 'term1',
       );
-    $this->drupalPost('admin/structure/taxonomy/tags/add', $edit, t('Save'));
+    $this->backdropPost('admin/structure/taxonomy/tags/add', $edit, t('Save'));
     $this->assertText('Created new term term1.');
 
     // Create term reference field.
@@ -138,11 +138,11 @@ class FeedsMapperTaxonomyTestCase extends FeedsMapperTestCase {
     $edit = array(
       'field_tags' . '[' . $langcode . '][]' => $term->tid,
     );
-    $this->drupalPost("node/$nid/edit", $edit, t('Save'));
+    $this->backdropPost("node/$nid/edit", $edit, t('Save'));
     $this->assertTaxonomyTerm($term->name);
 
     // Import nodes.
-    $this->drupalPost("node/$nid/import", array(), 'Import');
+    $this->backdropPost("node/$nid/import", array(), 'Import');
     $this->assertText('Created 10 nodes.');
 
     $count = db_query("SELECT COUNT(*) FROM {taxonomy_index}")->fetchField();
@@ -156,14 +156,14 @@ class FeedsMapperTaxonomyTestCase extends FeedsMapperTestCase {
    */
   public function testSearchByName() {
     $terms = array(
-      'Drupal',
+      'Backdrop',
       'localization',
       'localization client',
       'localization server',
       'open atrium',
       'translation',
       'translation server',
-      'Drupal planet',
+      'Backdrop planet',
     );
 
     $this->setSettings('syndication', 'FeedsNodeProcessor', array(
@@ -181,11 +181,11 @@ class FeedsMapperTaxonomyTestCase extends FeedsMapperTestCase {
     $nid = $this->createFeedNode('syndication', NULL, 'Syndication');
     $this->assertText('Created 10 nodes.');
     // Check that terms we not auto-created.
-    $this->drupalGet('node/2');
+    $this->backdropGet('node/2');
     foreach ($terms as $term) {
       $this->assertNoTaxonomyTerm($term);
     }
-    $this->drupalGet('node/3');
+    $this->backdropGet('node/3');
     $this->assertNoTaxonomyTerm('Washington DC');
 
     // Change the mapping configuration.
@@ -193,21 +193,21 @@ class FeedsMapperTaxonomyTestCase extends FeedsMapperTestCase {
     // Turn on autocreate.
     $mappings[5]['autocreate'] = TRUE;
     $this->addMappings('syndication', $mappings);
-    $this->drupalPost('node/' . $nid . '/import', array(), t('Import'));
+    $this->backdropPost('node/' . $nid . '/import', array(), t('Import'));
     $this->assertText('Updated 10 nodes.');
 
-    $this->drupalGet('node/2');
+    $this->backdropGet('node/2');
     foreach ($terms as $term) {
       $this->assertTaxonomyTerm($term);
     }
-    $this->drupalGet('node/3');
+    $this->backdropGet('node/3');
     $this->assertTaxonomyTerm('Washington DC');
 
     $names = db_query('SELECT name FROM {taxonomy_term_data}')->fetchCol();
     $this->assertEqual(count($names), 31, 'Found correct number of terms in the database.');
 
     // Run import again. This verifys that the terms we found by name.
-    $this->drupalPost('node/' . $nid . '/import', array(), t('Import'));
+    $this->backdropPost('node/' . $nid . '/import', array(), t('Import'));
     $this->assertText('Updated 10 nodes.');
     $names = db_query('SELECT name FROM {taxonomy_term_data}')->fetchCol();
     $this->assertEqual(count($names), 31, 'Found correct number of terms in the database.');
@@ -276,7 +276,7 @@ class FeedsMapperTaxonomyTestCase extends FeedsMapperTestCase {
         'url' => '',
         'guid' => $guid,
       );
-      drupal_write_record('feeds_item', $record);
+      backdrop_write_record('feeds_item', $record);
     }
 
     FeedsPlugin::loadMappers();
@@ -417,7 +417,7 @@ class FeedsMapperTaxonomyTestCase extends FeedsMapperTestCase {
       2 => $term2->tid,
     );
     for ($i = 1; $i <= 2; $i++) {
-      $this->drupalGet("node/$i/edit");
+      $this->backdropGet("node/$i/edit");
       $this->assertFieldByName('field_tags[und][]', $taxonomy_values[$i]);
     }
 
@@ -426,25 +426,25 @@ class FeedsMapperTaxonomyTestCase extends FeedsMapperTestCase {
     $this->assertText('Updated 2 nodes');
 
     // Check if the taxonomy reference field was cleared out for node 1.
-    $this->drupalGet('node/1/edit');
+    $this->backdropGet('node/1/edit');
     $this->assertFieldByName('field_tags[und][]', '_none');
-    $this->drupalGet('node/1');
+    $this->backdropGet('node/1');
     $this->assertNoText('field_tags');
 
     // Check if zero's didn't cleared out the taxonomy reference field for
     // node 2.
     $terms0 = taxonomy_get_term_by_name('0');
     $term0 = reset($terms0);
-    $this->drupalGet('node/2/edit');
+    $this->backdropGet('node/2/edit');
     $this->assertFieldByName('field_tags[und][]', $term0->tid);
-    $this->drupalGet('node/2');
+    $this->backdropGet('node/2');
     $this->assertText('field_tags');
 
     // Re-import the first file again and check if the values returned.
     $this->importFile('node', $this->absolutePath() . '/tests/feeds/content.csv');
     $this->assertText('Updated 2 nodes');
     for ($i = 1; $i <= 2; $i++) {
-      $this->drupalGet("node/$i/edit");
+      $this->backdropGet("node/$i/edit");
       $this->assertFieldByName('field_tags[und][]', $taxonomy_values[$i]);
     }
 
@@ -453,9 +453,9 @@ class FeedsMapperTaxonomyTestCase extends FeedsMapperTestCase {
     $this->assertText('Updated 2 nodes');
 
     // Check if the taxonomy reference field was cleared out for node 1.
-    $this->drupalGet('node/1/edit');
+    $this->backdropGet('node/1/edit');
     $this->assertFieldByName('field_tags[und][]', '_none');
-    $this->drupalGet('node/1');
+    $this->backdropGet('node/1');
     $this->assertNoText('field_tags');
   }
 

@@ -26,14 +26,14 @@ class FeedsMapperNodeSummaryTestCase extends FeedsMapperTestCase {
     $this->createImporterWithSummaryMapper();
 
     // Create a new filter format.
-    $format = drupal_strtolower($this->randomName());
+    $format = backdrop_strtolower($this->randomName());
     $edit = array(
       'format' => $format,
       'name' => $this->randomName(),
       // Authenticated users.
       'roles[2]' => TRUE,
     );
-    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->backdropPost('admin/config/content/formats/add', $edit, t('Save configuration'));
 
     // The "update existing" and "skip hash check" are turned on so we can test
     // later if the summaries of the nodes get overwritten with the values from
@@ -50,7 +50,7 @@ class FeedsMapperNodeSummaryTestCase extends FeedsMapperTestCase {
     $this->assertNodeSummaryValues();
 
     // Check that text format is applied correctly.
-    $this->drupalGet('node/1/edit');
+    $this->backdropGet('node/1/edit');
     $this->assertNodeFieldValue('format', $format);
 
     // Check the teasers of the three imported nodes, assumed to be all present
@@ -62,9 +62,9 @@ class FeedsMapperNodeSummaryTestCase extends FeedsMapperTestCase {
       'body[und][0][summary]' => 'Nam liber tempor summary',
       'body[und][0][value]' => 'Nam liber tempor body',
     );
-    $this->drupalPost('node/1/edit', $edit, t('Save'));
-    $this->drupalPost('node/2/edit', $edit, t('Save'));
-    $this->drupalPost('node/3/edit', $edit, t('Save'));
+    $this->backdropPost('node/1/edit', $edit, t('Save'));
+    $this->backdropPost('node/2/edit', $edit, t('Save'));
+    $this->backdropPost('node/3/edit', $edit, t('Save'));
 
     // Import the same CSV file again.
     $this->importFile('syndication', $this->absolutePath() . '/tests/feeds/node_summary.csv');
@@ -77,11 +77,11 @@ class FeedsMapperNodeSummaryTestCase extends FeedsMapperTestCase {
     $this->assertNoText('Nam liber tempor body');
 
     // Check that text format is applied correctly.
-    $this->drupalGet('node/1/edit');
+    $this->backdropGet('node/1/edit');
     $this->assertNodeFieldValue('format', $format);
-    $this->drupalGet('node/2/edit');
+    $this->backdropGet('node/2/edit');
     $this->assertNodeFieldValue('format', $format);
-    $this->drupalGet('node/3/edit');
+    $this->backdropGet('node/3/edit');
     $this->assertNodeFieldValue('format', $format);
 
     // Remove the body mapping to check that the text format doesn't get updated
@@ -102,11 +102,11 @@ class FeedsMapperNodeSummaryTestCase extends FeedsMapperTestCase {
     $this->assertText('Updated 3 nodes');
 
     // Check that text format remains at its previous value.
-    $this->drupalGet('node/1/edit');
+    $this->backdropGet('node/1/edit');
     $this->assertNodeFieldValue('format', $format);
-    $this->drupalGet('node/2/edit');
+    $this->backdropGet('node/2/edit');
     $this->assertNodeFieldValue('format', $format);
-    $this->drupalGet('node/3/edit');
+    $this->backdropGet('node/3/edit');
     $this->assertNodeFieldValue('format', $format);
   }
 
@@ -186,13 +186,13 @@ class FeedsMapperNodeSummaryTestCase extends FeedsMapperTestCase {
    */
   protected function assertNodeSummaryValues() {
     // Check the three imported nodes.
-    $this->drupalGet('node/1/edit');
+    $this->backdropGet('node/1/edit');
     $this->assertNodeFieldValue('summary', 'Lorem ipsum summary');
     $this->assertNodeFieldValue('body', 'Lorem ipsum body');
-    $this->drupalGet('node/2/edit');
+    $this->backdropGet('node/2/edit');
     $this->assertNodeFieldValue('summary', '');
     $this->assertNodeFieldValue('body', 'Ut wisi enim ad minim veniam body');
-    $this->drupalGet('node/3/edit');
+    $this->backdropGet('node/3/edit');
     $this->assertNodeFieldValue('summary', '');
     $this->assertNodeFieldValue('body', '');
   }
@@ -201,7 +201,7 @@ class FeedsMapperNodeSummaryTestCase extends FeedsMapperTestCase {
    * Checks the frontpage for teaser values.
    */
   protected function assertNodeTeaserValues() {
-    $this->drupalGet('');
+    $this->backdropGet('');
     $this->assertText('Lorem ipsum summary');
     $this->assertNoText('Lorem ipsum body');
     $this->assertText('Ut wisi enim ad minim veniam body');

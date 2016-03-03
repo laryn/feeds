@@ -29,10 +29,10 @@ class FeedsExamplesFeedTestCase extends FeedsWebTestCase {
     $nid = $this->createFeedNode('feed', NULL, '', 'feed');
 
     // Assert menu tabs for feed nodes does not show up on non-feed nodes.
-    $this->drupalGet("node/{$nid}/feed-items");
+    $this->backdropGet("node/{$nid}/feed-items");
     $this->assertResponse(200);
-    $not_feed_node = $this->drupalCreateNode();
-    $this->drupalGet("node/{$not_feed_node->nid}/feed-items");
+    $not_feed_node = $this->backdropCreateNode();
+    $this->backdropGet("node/{$not_feed_node->nid}/feed-items");
     $this->assertResponse(404);
 
     // Assert results.
@@ -61,15 +61,15 @@ class FeedsExamplesFeedTestCase extends FeedsWebTestCase {
     $this->assertEqual($count, 1, 'Found feed_node_item record.');
 
     // Remove all items
-    $this->drupalPost("node/$nid/delete-items", array(), 'Delete');
+    $this->backdropPost("node/$nid/delete-items", array(), 'Delete');
     $this->assertText('Deleted 10 nodes');
 
     // Import again.
-    $this->drupalPost("node/$nid/import", array(), 'Import');
+    $this->backdropPost("node/$nid/import", array(), 'Import');
     $this->assertText('Created 10 nodes');
 
     // Delete and assert all items gone.
-    $this->drupalPost("node/$nid/delete-items", array(), 'Delete');
+    $this->backdropPost("node/$nid/delete-items", array(), 'Delete');
 
     $count = db_query("SELECT COUNT(*) FROM {node} WHERE type = 'feed_item'")->fetchField();
     $this->assertEqual($count, 0, 'Found the correct number of feed item nodes in database.');
@@ -119,9 +119,9 @@ class FeedsExamplesOPMLTestCase extends FeedsWebTestCase {
     $this->assertEqual($count, 4, 'Found correct number of items.');
 
     // Import a feed and then delete all items from it.
-    $this->drupalPost('node/1/import', array(), 'Import');
+    $this->backdropPost('node/1/import', array(), 'Import');
     $this->assertText('Created 10 nodes');
-    $this->drupalPost('node/1/delete-items', array(), 'Delete');
+    $this->backdropPost('node/1/delete-items', array(), 'Delete');
     $this->assertText('Deleted 10 nodes');
   }
 }

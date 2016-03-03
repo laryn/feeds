@@ -37,7 +37,7 @@ class FeedsPushTest extends FeedsWebTestCase {
       ),
     );
 
-    $this->drupalGet("feeds/importer/push/0", $options);
+    $this->backdropGet("feeds/importer/push/0", $options);
 
     $this->assertResponse(200);
     $this->assertRaw(check_plain($challenge), 'Challenge was escaped.');

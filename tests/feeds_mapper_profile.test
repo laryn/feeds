@@ -34,7 +34,7 @@ class FeedsMapperProfileTestCase extends FeedsMapperTestCase {
       'name' => 'profile_textfield_test',
       'register' => 1,
     );
-    $name = $this->drupalPost('admin/config/people/profile/add/textfield', $edit, t('Save field'));
+    $name = $this->backdropPost('admin/config/people/profile/add/textfield', $edit, t('Save field'));
     $edit = array(
       'category' => 'test',
       'title' => 'letter',
@@ -42,7 +42,7 @@ class FeedsMapperProfileTestCase extends FeedsMapperTestCase {
       'options' => 'alpha' . "\n" . 'beta' . "\n" . 'gamma',
       'register' => 1,
     );
-    $name = $this->drupalPost('admin/config/people/profile/add/selection', $edit, t('Save field'));
+    $name = $this->backdropPost('admin/config/people/profile/add/selection', $edit, t('Save field'));
 
     // Create an importer.
     $this->createImporterConfiguration('Profile import', 'profile_import');
@@ -80,14 +80,14 @@ class FeedsMapperProfileTestCase extends FeedsMapperTestCase {
       'content_type' => '',
       'import_period' => FEEDS_SCHEDULE_NEVER,
     );
-    $this->drupalPost('admin/structure/feeds/profile_import/settings', $edit, 'Save');
+    $this->backdropPost('admin/structure/feeds/profile_import/settings', $edit, 'Save');
 
     // Import CSV file.
     $this->importFile('profile_import', $this->absolutePath() .'/tests/feeds/profile.csv');
     $this->assertText('Created 2 users.');
 
     // Check the two imported users.
-    $this->drupalGet('admin/people');
+    $this->backdropGet('admin/people');
     $this->assertText('magna');
     $this->assertText('rhoncus');
 

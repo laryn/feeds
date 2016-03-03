@@ -125,12 +125,12 @@ class FeedsHTTPFetcher extends FeedsFetcher {
       catch (Exception $e) {
         // In case of an error, respond with a 503 Service (temporary) unavailable.
         header('HTTP/1.1 503 "Not Found"', NULL, 503);
-        drupal_exit();
+        backdrop_exit();
       }
     }
     // Will generate the default 200 response.
     header('HTTP/1.1 200 "OK"', NULL, 200);
-    drupal_exit();
+    backdrop_exit();
   }
 
   /**
@@ -366,7 +366,7 @@ class PuSHSubscription implements PuSHSubscriptionInterface {
   public function save() {
     $this->timestamp = time();
     $this->delete($this->domain, $this->subscriber_id);
-    drupal_write_record('feeds_push_subscriptions', $this);
+    backdrop_write_record('feeds_push_subscriptions', $this);
   }
 
   /**
@@ -399,7 +399,7 @@ class PuSHEnvironment implements PuSHSubscriberEnvironmentInterface {
    * Implements PuSHSubscriberEnvironmentInterface::msg().
    */
   public function msg($msg, $level = 'status') {
-    drupal_set_message(check_plain($msg), $level);
+    backdrop_set_message(check_plain($msg), $level);
   }
 
   /**

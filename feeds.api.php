@@ -47,7 +47,7 @@ function hook_feeds_plugins() {
       'parent' => 'FeedsFetcher',
       'class' => 'MyFetcher',
       'file' => 'MyFetcher.inc',
-      'path' => drupal_get_path('module', 'my_module'), // Feeds will look for MyFetcher.inc in the my_module directory.
+      'path' => backdrop_get_path('module', 'my_module'), // Feeds will look for MyFetcher.inc in the my_module directory.
     ),
   );
   $info['MyParser'] = array(
@@ -58,7 +58,7 @@ function hook_feeds_plugins() {
       'parent' => 'FeedsParser', // Being directly or indirectly an extension of FeedsParser makes a plugin a parser plugin.
       'class' => 'MyParser',
       'file' => 'MyParser.inc',
-      'path' => drupal_get_path('module', 'my_module'),
+      'path' => backdrop_get_path('module', 'my_module'),
     ),
   );
   $info['MyProcessor'] = array(
@@ -69,7 +69,7 @@ function hook_feeds_plugins() {
       'parent' => 'FeedsProcessor',
       'class' => 'MyProcessor',
       'file' => 'MyProcessor.inc',
-      'path' => drupal_get_path('module', 'my_module'),
+      'path' => backdrop_get_path('module', 'my_module'),
     ),
   );
   return $info;
@@ -176,7 +176,7 @@ function hook_feeds_after_save(FeedsSource $source, $entity, $item, $entity_id) 
     $feeds_item = $entity->feeds_item;
     $feeds_item->batch_id = feeds_delete_get_current_batch($feeds_item->feed_nid);
 
-    drupal_write_record('feeds_delete_item', $feeds_item);
+    backdrop_write_record('feeds_delete_item', $feeds_item);
   }
 }
 

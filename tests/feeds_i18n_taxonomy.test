@@ -41,7 +41,7 @@ class Feedsi18nTaxonomyTestCase extends Feedsi18nTestCase {
       'name' => $this->vocabulary,
       'machine_name' => $this->vocabulary,
     );
-    $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->backdropPost('admin/structure/taxonomy/add', $edit, t('Save'));
 
     // Configure importer.
     $this->setSettings('i18n', $this->processorName, array(
@@ -68,12 +68,12 @@ class Feedsi18nTaxonomyTestCase extends Feedsi18nTestCase {
    */
   public function testAvailableProcessorLanguageSetting() {
     // Check if the language setting is available when the i18n_taxonomy module is enabled.
-    $this->drupalGet('admin/structure/feeds/i18n/settings/FeedsTermProcessor');
+    $this->backdropGet('admin/structure/feeds/i18n/settings/FeedsTermProcessor');
     $this->assertField('language', 'Language field is available on the term processor settings when the i18n_taxonomy module is enabled.');
 
     // Disable the i18n_taxonomy module and check if the language setting is no longer available.
     module_disable(array('i18n_taxonomy'));
-    $this->drupalGet('admin/structure/feeds/i18n/settings/FeedsTermProcessor');
+    $this->backdropGet('admin/structure/feeds/i18n/settings/FeedsTermProcessor');
     $this->assertNoField('language', 'Language field is not available on the term processor settings when the i18n_taxonomy module is disabled.');
   }
 
@@ -83,8 +83,8 @@ class Feedsi18nTaxonomyTestCase extends Feedsi18nTestCase {
   public function testDisabledi18nTaxonomyModule() {
     module_disable(array('i18n_taxonomy'));
     // Make sure that entity info is reset.
-    drupal_flush_all_caches();
-    drupal_static_reset();
+    backdrop_flush_all_caches();
+    backdrop_static_reset();
 
     // Import content.
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');
@@ -102,10 +102,10 @@ class Feedsi18nTaxonomyTestCase extends Feedsi18nTestCase {
    */
   public function testUninstalledi18nTaxonomyModule() {
     module_disable(array('i18n_taxonomy'));
-    drupal_uninstall_modules(array('i18n_taxonomy'));
+    backdrop_uninstall_modules(array('i18n_taxonomy'));
     // Make sure that entity info is reset.
-    drupal_flush_all_caches();
-    drupal_static_reset();
+    backdrop_flush_all_caches();
+    backdrop_static_reset();
 
     // Import content.
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');

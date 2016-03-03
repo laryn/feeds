@@ -82,7 +82,7 @@ class FeedsImporter extends FeedsConfigurable {
     $save->config = $this->getConfig();
 
     if ($config = db_query("SELECT config FROM {feeds_importer} WHERE id = :id", array(':id' => $this->id))->fetchField()) {
-      drupal_write_record('feeds_importer', $save, 'id');
+      backdrop_write_record('feeds_importer', $save, 'id');
       // Only rebuild menu if content_type has changed. Don't worry about
       // rebuilding menus when creating a new importer since it will default
       // to the standalone page.
@@ -92,7 +92,7 @@ class FeedsImporter extends FeedsConfigurable {
       }
     }
     else {
-      drupal_write_record('feeds_importer', $save);
+      backdrop_write_record('feeds_importer', $save);
     }
   }
 
@@ -231,7 +231,7 @@ class FeedsImporter extends FeedsConfigurable {
       '#default_value' => $config['content_type'],
     );
     $cron_required =  ' ' . l(t('Requires cron to be configured.'), 'http://drupal.org/cron', array('attributes' => array('target' => '_new')));
-    $period = drupal_map_assoc(array(900, 1800, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2419200), 'format_interval');
+    $period = backdrop_map_assoc(array(900, 1800, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2419200), 'format_interval');
     foreach ($period as &$p) {
       $p = t('Every !p', array('!p' => $p));
     }

@@ -26,7 +26,7 @@ class FeedsMapperUniqueTestCase extends FeedsMapperTestCase {
     $typename = $this->createContentType(array(), array('alpha' => 'text'));
 
     // Create two nodes. Put unique value into field field_alpha.
-    $node1 = $this->drupalCreateNode(array(
+    $node1 = $this->backdropCreateNode(array(
       'type' => $typename,
       'field_alpha' => array(
         LANGUAGE_NONE => array(
@@ -36,7 +36,7 @@ class FeedsMapperUniqueTestCase extends FeedsMapperTestCase {
         ),
       ),
     ));
-    $node2 = $this->drupalCreateNode(array(
+    $node2 = $this->backdropCreateNode(array(
       'type' => $typename,
       'field_alpha' => array(
         LANGUAGE_NONE => array(

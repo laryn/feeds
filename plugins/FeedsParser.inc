@@ -104,7 +104,7 @@ abstract class FeedsParser extends FeedsPlugin {
     self::loadMappers();
     $sources = array();
     $content_type = feeds_importer($this->id)->config['content_type'];
-    drupal_alter('feeds_parser_sources', $sources, $content_type);
+    backdrop_alter('feeds_parser_sources', $sources, $content_type);
     if (!feeds_importer($this->id)->config['content_type']) {
       return $sources;
     }
@@ -235,7 +235,7 @@ class FeedsTermElement extends FeedsElement {
 
   /**
    * @param $term
-   *   An array or a stdClass object that is a Drupal taxonomy term.
+   *   An array or a stdClass object that is a Backdrop taxonomy term.
    */
   public function __construct($term) {
     if (is_array($term)) {
@@ -267,7 +267,7 @@ class FeedsGeoTermElement extends FeedsTermElement {
   public $lat, $lon, $bound_top, $bound_right, $bound_bottom, $bound_left, $geometry;
   /**
    * @param $term
-   *   An array or a stdClass object that is a Drupal taxonomy term. Can include
+   *   An array or a stdClass object that is a Backdrop taxonomy term. Can include
    *   geo extensions.
    */
   public function __construct($term) {
@@ -330,7 +330,7 @@ class FeedsEnclosure extends FeedsElement {
    */
   public function setAllowedExtensions($extensions) {
     // Normalize whitespace so that empty extensions are not allowed.
-    $this->allowedExtensions = drupal_strtolower(trim(preg_replace('/\s+/', ' ', $extensions)));
+    $this->allowedExtensions = backdrop_strtolower(trim(preg_replace('/\s+/', ' ', $extensions)));
   }
 
   /**
@@ -356,7 +356,7 @@ class FeedsEnclosure extends FeedsElement {
    *   Thrown if the file extension is invalid.
    */
   public function getSanitizedUri() {
-    return drupal_dirname($this->getValue()) . '/' . $this->getSafeFilename();
+    return backdrop_dirname($this->getValue()) . '/' . $this->getSafeFilename();
   }
 
   /**
@@ -390,7 +390,7 @@ class FeedsEnclosure extends FeedsElement {
     list($filename) = explode('?', $this->getValue());
     list($filename) = explode('#', $filename);
 
-    $filename = rawurldecode(drupal_basename($filename));
+    $filename = rawurldecode(backdrop_basename($filename));
 
     // Remove leading and trailing whitespace and periods.
     $filename = trim($filename, " \t\n\r\0\x0B.");
@@ -399,7 +399,7 @@ class FeedsEnclosure extends FeedsElement {
       $extension = FALSE;
     }
     else {
-      $extension = drupal_strtolower(substr($filename, strrpos($filename, '.') + 1));
+      $extension = backdrop_strtolower(substr($filename, strrpos($filename, '.') + 1));
     }
 
     if (!$extension || !in_array($extension, explode(' ', $this->allowedExtensions), TRUE)) {
@@ -427,14 +427,14 @@ class FeedsEnclosure extends FeedsElement {
   }
 
   /**
-   * Get a Drupal file object of the enclosed resource, download if necessary.
+   * Get a Backdrop file object of the enclosed resource, download if necessary.
    *
    * @param $destination
    *   The path or uri specifying the target directory in which the file is
    *   expected. Don't use trailing slashes unless it's a streamwrapper scheme.
    *
    * @return
-   *   A Drupal temporary file object of the enclosed resource.
+   *   A Backdrop temporary file object of the enclosed resource.
    *
    * @throws Exception
    *   If file object could not be created.
@@ -445,14 +445,14 @@ class FeedsEnclosure extends FeedsElement {
       // Prepare destination directory.
       file_prepare_directory($destination, FILE_MODIFY_PERMISSIONS | FILE_CREATE_DIRECTORY);
       // Copy or save file depending on whether it is remote or local.
-      if (drupal_realpath($this->getSanitizedUri())) {
+      if (backdrop_realpath($this->getSanitizedUri())) {
         $file           = new stdClass();
         $file->uid      = 0;
         $file->uri      = $this->getSanitizedUri();
         $file->filemime = $this->getMIMEType();
         $file->filename = $this->getSafeFilename();
 
-        if (drupal_dirname($file->uri) !== $destination) {
+        if (backdrop_dirname($file->uri) !== $destination) {
           $file = file_copy($file, $destination);
         }
         else {
@@ -476,7 +476,7 @@ class FeedsEnclosure extends FeedsElement {
           $filename = $this->getLocalValue();
 
           if (module_exists('transliteration')) {
-            require_once drupal_get_path('module', 'transliteration') . '/transliteration.inc';
+            require_once backdrop_get_path('module', 'transliteration') . '/transliteration.inc';
             $filename = transliteration_clean_filename($filename);
           }
 
@@ -655,7 +655,7 @@ class FeedsDateTimeElement extends FeedsElement {
  * Extend PHP DateTime class with granularity handling, merge functionality and
  * slightly more flexible initialization parameters.
  *
- * This class is a Drupal independent extension of the >= PHP 5.2 DateTime
+ * This class is a Backdrop independent extension of the >= PHP 5.2 DateTime
  * class.
  *
  * @see FeedsDateTimeElement

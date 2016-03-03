@@ -6,14 +6,14 @@
 FEEDS
 =====
 
-An import and aggregation framework for Drupal.
+An import and aggregation framework for Backdrop.
 http://drupal.org/project/feeds
 
 Features
 ========
 
 - Pluggable import configurations consisting of fetchers (get data) parsers
-  (read and transform data) and processors (create content on Drupal).
+  (read and transform data) and processors (create content on Backdrop).
 -- HTTP upload (with optional PubSubHubbub support).
 -- File upload.
 -- CSV, RSS, Atom parsing.
@@ -36,8 +36,8 @@ Requirements
   http://drupal.org/project/ctools
 - Job Scheduler
   http://drupal.org/project/job_scheduler
-- Drupal 7.x
-  http://drupal.org/project/drupal
+- Backdrop 7.x
+  http://drupal.org/project/backdrop
 - PHP safe mode is not supported, depending on your Feeds Importer configuration
   safe mode may cause no problems though.
 
@@ -61,7 +61,7 @@ SimplePie Installation
      For example rename 'simplepie-simplepie-e9472a1' to 'simplepie'.
   4. Move the folder to sites/all/libraries. The final directory structure
      should be sites/all/libraries/simplepie.
-  5. Flush the Drupal cache.
+  5. Flush the Backdrop cache.
   6. The SimplePie parser should be available now in the list of parsers.
 
 Feature modules
@@ -155,7 +155,7 @@ http://drupal.org/node/622700
 Debugging
 =========
 
-Set the Drupal variable 'feeds_debug' to TRUE (i. e. using drush). This will
+Set the Backdrop variable 'feeds_debug' to TRUE (i. e. using drush). This will
 create a file /tmp/feeds_[my_site_location].log. Use "tail -f" on the command
 line to get a live view of debug output.
 
@@ -176,7 +176,7 @@ array in your settings.php file.
 Name:        feeds_debug
 Default:     FALSE
 Description: Set to TRUE for enabling debug output to
-             /DRUPALTMPDIR/feeds_[sitename].log
+             /BACKDROPTMPDIR/feeds_[sitename].log
 
 Name:        feeds_importer_class
 Default:     'FeedsImporter'

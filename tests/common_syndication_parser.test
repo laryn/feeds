@@ -8,10 +8,10 @@
 /**
  * Test cases for common syndication parser library.
  *
- * @todo Break out into Drupal independent test framework.
- * @todo Could I use DrupalUnitTestCase here?
+ * @todo Break out into Backdrop independent test framework.
+ * @todo Could I use BackdropUnitTestCase here?
  */
-class CommonSyndicationParserTestCase extends DrupalWebTestCase {
+class CommonSyndicationParserTestCase extends BackdropWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Common Syndication Parser',

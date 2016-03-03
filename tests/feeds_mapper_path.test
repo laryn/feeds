@@ -91,7 +91,7 @@ class FeedsMapperPathTestCase extends FeedsMapperTestCase {
       'name' => 'Addams vocabulary',
       'machine_name' => 'addams',
     );
-    $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->backdropPost('admin/structure/taxonomy/add', $edit, t('Save'));
 
     $this->setSettings('path_test', 'FeedsTermProcessor', array('bundle' => 'addams', 'update_existing' => 2));
 

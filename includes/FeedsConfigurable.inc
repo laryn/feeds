@@ -60,7 +60,7 @@ abstract class FeedsConfigurable {
       throw new InvalidArgumentException(t('Empty configuration identifier.'));
     }
 
-    $instances = &drupal_static(__METHOD__, array());
+    $instances = &backdrop_static(__METHOD__, array());
 
     if (!isset($instances[$class][$id])) {
       $instances[$class][$id] = new $class($id);
@@ -222,7 +222,7 @@ abstract class FeedsConfigurable {
   public function configFormSubmit(&$values) {
     $this->addConfig($values);
     $this->save();
-    drupal_set_message(t('Your changes have been saved.'));
+    backdrop_set_message(t('Your changes have been saved.'));
     feeds_cache_clear(FALSE);
   }
 
@@ -251,7 +251,7 @@ abstract class FeedsConfigurable {
  */
 function feeds_get_form($configurable, $form_method) {
   if (method_exists($configurable, $form_method)) {
-    return drupal_get_form(get_class($configurable) . '_feeds_form', $configurable, $form_method);
+    return backdrop_get_form(get_class($configurable) . '_feeds_form', $configurable, $form_method);
   }
 }
 

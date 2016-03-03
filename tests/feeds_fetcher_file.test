@@ -47,7 +47,7 @@ class FeedsFileFetcherTestCase extends FeedsWebTestCase {
       $edit = array(
         'feeds[FeedsFileFetcher][source]' => $path,
       );
-      $this->drupalPost('import/node', $edit, t('Import'));
+      $this->backdropPost('import/node', $edit, t('Import'));
       $this->assertText("The file needs to reside within the site's files directory, its path needs to start with scheme://. Available schemes:");
       $count = db_query("SELECT COUNT(*) FROM {feeds_source} WHERE feed_nid = 0")->fetchField();
       $this->assertEqual($count, 0);
@@ -64,7 +64,7 @@ class FeedsFileFetcherTestCase extends FeedsWebTestCase {
     $edit = array(
       'feeds[FeedsFileFetcher][source]' => $dir,
     );
-    $this->drupalPost('import/node', $edit, t('Import'));
+    $this->backdropPost('import/node', $edit, t('Import'));
     $this->assertText('Created 18 nodes');
   }
 
@@ -78,7 +78,7 @@ class FeedsFileFetcherTestCase extends FeedsWebTestCase {
     $edit = array(
       'content_type' => '',
     );
-    $this->drupalPost('admin/structure/feeds/node/settings', $edit, 'Save');
+    $this->backdropPost('admin/structure/feeds/node/settings', $edit, 'Save');
     $this->setPlugin('node', 'FeedsFileFetcher');
     $this->setPlugin('node', 'FeedsCSVParser');
     $mappings = array(
@@ -107,7 +107,7 @@ class FeedsFileFetcherTestCase extends FeedsWebTestCase {
     $edit = array(
       'feeds[FeedsFileFetcher][source]' => $dir,
     );
-    $this->drupalPost('import/node', $edit, t('Import'));
+    $this->backdropPost('import/node', $edit, t('Import'));
     $this->assertText('Created 18 nodes');
   }
 

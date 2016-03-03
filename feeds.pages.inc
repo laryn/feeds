@@ -38,18 +38,18 @@ function feeds_page() {
   if (empty($rows)) {
     // The feeds_ui module is enabled.
     if (module_exists('feeds_ui') && user_access('administer feeds')) {
-      drupal_set_message(t('There are no importers, go to <a href="@importers">Feed importers</a> to create one or enable an existing one.', array('@importers' => url('admin/structure/feeds'))));
+      backdrop_set_message(t('There are no importers, go to <a href="@importers">Feed importers</a> to create one or enable an existing one.', array('@importers' => url('admin/structure/feeds'))));
     }
     else {
       // The feeds_ui module is not enabled but the current user has access to
       // Modules to enable it.
       if (user_access('administer modules')) {
-        drupal_set_message(t('The Feeds UI Admin module is not enabled and there are no importers, go to <a href="@modules">Modules</a> and enable Feeds Admin UI. Then go to <a href="@importers">Feed importers</a> to create one or enable an existing one.', array('@modules' => url('admin/modules'), '@importers' => url('admin/structure/feeds'))));
+        backdrop_set_message(t('The Feeds UI Admin module is not enabled and there are no importers, go to <a href="@modules">Modules</a> and enable Feeds Admin UI. Then go to <a href="@importers">Feed importers</a> to create one or enable an existing one.', array('@modules' => url('admin/modules'), '@importers' => url('admin/structure/feeds'))));
       }
       else {
         // The feeds_ui module is not enabled and the current user cannot
         // enable it.
-        drupal_set_message(t("The Feeds UI Admin module is not enabled. Please contact the Administrator for your site and ask them to enable it."));
+        backdrop_set_message(t("The Feeds UI Admin module is not enabled. Please contact the Administrator for your site and ask them to enable it."));
       }
     }
   }
@@ -252,7 +252,7 @@ function feeds_unlock_tab_form($form, &$form_state, FeedsImporter $importer = NU
  * Form submit handler. Resets all feeds state.
  */
 function feeds_unlock_tab_form_submit($form, &$form_state) {
-  drupal_set_message(t('Import Unlocked'));
+  backdrop_set_message(t('Import Unlocked'));
   $form_state['redirect'] = $form['#redirect'];
   $feed_nid = empty($form['#feed_nid']) ? 0 : $form['#feed_nid'];
   $importer_id = $form['#importer_id'];
@@ -277,7 +277,7 @@ function feeds_fetcher_callback($importer, $feed_nid = 0) {
       // Do nothing.
     }
   }
-  drupal_access_denied();
+  backdrop_access_denied();
 }
 
 /**
@@ -287,7 +287,7 @@ function feeds_importer_template(FeedsImporter $importer) {
   if ($importer->parser instanceof FeedsCSVParser) {
     return $importer->parser->getTemplate();
   }
-  return drupal_not_found();
+  return backdrop_not_found();
 }
 
 /**
@@ -345,7 +345,7 @@ function theme_feeds_source_status($v) {
  */
 function theme_feeds_upload($variables) {
   $element = $variables['element'];
-  drupal_add_css(drupal_get_path('module', 'feeds') . '/feeds.css');
+  backdrop_add_css(backdrop_get_path('module', 'feeds') . '/feeds.css');
   _form_set_class($element, array('form-file'));
   $summary = '';
   if (!empty($element['#file_info'])) {

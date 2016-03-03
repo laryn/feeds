@@ -60,7 +60,7 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
       'name' => 'Categories',
       'machine_name' => 'categories',
     );
-    $this->drupalPost('admin/structure/taxonomy/add', $edit, 'Save');
+    $this->backdropPost('admin/structure/taxonomy/add', $edit, 'Save');
 
     // Create content type.
     $this->fields = array(
@@ -259,10 +259,10 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
     // Change mappers language to French.
     $path = 'admin/structure/feeds/node/mapping';
     foreach ($mappings as $i => $mapping) {
-      $this->drupalPostAJAX($path, array(), 'mapping_settings_edit_' . $i);
+      $this->backdropPostAJAX($path, array(), 'mapping_settings_edit_' . $i);
       $edit = array("config[$i][settings][field_language]" => 'fr');
-      $this->drupalPostAJAX(NULL, $edit, 'mapping_settings_update_' . $i);
-      $this->drupalPost(NULL, array(), t('Save'));
+      $this->backdropPostAJAX(NULL, $edit, 'mapping_settings_update_' . $i);
+      $this->backdropPost(NULL, array(), t('Save'));
     }
     // Import French item.
     $this->importFile('node', $this->absolutePath() . '/tests/feeds/multilingual_fr.csv');
@@ -306,7 +306,7 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
       $edit = array(
         'field[settings][granularity][second]' => 1,
       );
-      $this->drupalPost('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field . '/field-settings', $edit, 'Save field settings');
+      $this->backdropPost('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field . '/field-settings', $edit, 'Save field settings');
     }
 
     // Hack to get date fields to not round to every 15 seconds.
@@ -315,16 +315,16 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
       $edit = array(
         'widget_type' => 'date_select',
       );
-      $this->drupalPost('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field . '/widget-type', $edit, 'Continue');
+      $this->backdropPost('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field . '/widget-type', $edit, 'Continue');
       $edit = array(
         'instance[widget][settings][increment]' => 1,
         'field[settings][enddate_get]' => 1,
       );
-      $this->drupalPost('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field, $edit, 'Save settings');
+      $this->backdropPost('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field, $edit, 'Save settings');
       $edit = array(
         'widget_type' => 'date_text',
       );
-      $this->drupalPost('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field . '/widget-type', $edit, 'Continue');
+      $this->backdropPost('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field . '/widget-type', $edit, 'Continue');
     }
 
     // Create a node with Dutch values.
@@ -340,18 +340,18 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
       'field_number_float[und][0][value]' => '30.2795',
       'field_number_integer[und][0][value]' => '30',
       'field_text[und][0][value]' => 'Wortelen',
-      'files[field_image_und_0]' => drupal_realpath('public://images/attersee.jpeg'),
+      'files[field_image_und_0]' => backdrop_realpath('public://images/attersee.jpeg'),
       'field_category[und]' => 'Nieuws',
       'language' => 'nl',
     );
-    $this->drupalPost('node/add/' . $this->contentType, $edit, t('Save'));
+    $this->backdropPost('node/add/' . $this->contentType, $edit, t('Save'));
     // Add alt/title to the image.
     $edit = array(
       'field_image[nl][0][alt]' => 'Bij het zien',
       'field_image[nl][0][title]' => 'Bij het zien van de groene vloeistof',
     );
-    $this->drupalPost('node/1/edit/nl', $edit, t('Save'));
-    $this->drupalGet('node/1/edit/nl');
+    $this->backdropPost('node/1/edit/nl', $edit, t('Save'));
+    $this->backdropGet('node/1/edit/nl');
 
     // Assert that the Dutch values were put in as expected.
     $node = node_load(1, NULL, TRUE);
@@ -367,14 +367,14 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
 
     // Change unique target from guid (0) to title (1).
     $path = 'admin/structure/feeds/node/mapping';
-    $this->drupalPostAJAX($path, array(), 'mapping_settings_edit_0');
+    $this->backdropPostAJAX($path, array(), 'mapping_settings_edit_0');
     $edit = array("config[0][settings][unique]" => FALSE);
-    $this->drupalPostAJAX(NULL, $edit, 'mapping_settings_update_0');
-    $this->drupalPost(NULL, array(), t('Save'));
-    $this->drupalPostAJAX($path, array(), 'mapping_settings_edit_1');
+    $this->backdropPostAJAX(NULL, $edit, 'mapping_settings_update_0');
+    $this->backdropPost(NULL, array(), t('Save'));
+    $this->backdropPostAJAX($path, array(), 'mapping_settings_edit_1');
     $edit = array("config[1][settings][unique]" => 1);
-    $this->drupalPostAJAX(NULL, $edit, 'mapping_settings_update_1');
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->backdropPostAJAX(NULL, $edit, 'mapping_settings_update_1');
+    $this->backdropPost(NULL, array(), t('Save'));
 
     // Update this item with Feeds.
     $this->setSettings('node', 'FeedsNodeProcessor', array(
@@ -419,8 +419,8 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
   public function testWithDisabledEntityTranslationModule() {
     module_disable(array('entity_translation'));
     // Make sure that entity info is reset.
-    drupal_flush_all_caches();
-    drupal_static_reset();
+    backdrop_flush_all_caches();
+    backdrop_static_reset();
 
     // Configure importer to import in French language.
     $this->setSettings('node', 'FeedsNodeProcessor', array(
@@ -453,10 +453,10 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
    */
   public function testWithUninstalledEntityTranslationModule() {
     module_disable(array('entity_translation'));
-    drupal_uninstall_modules(array('entity_translation'));
+    backdrop_uninstall_modules(array('entity_translation'));
     // Make sure that entity info is reset.
-    drupal_flush_all_caches();
-    drupal_static_reset();
+    backdrop_flush_all_caches();
+    backdrop_static_reset();
 
     // Configure importer to import in French language.
     $this->setSettings('node', 'FeedsNodeProcessor', array(
@@ -497,12 +497,12 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
     $edit = array(
       'enabled[fr]' => FALSE,
     );
-    $this->drupalPost($path, $edit, t('Save configuration'));
+    $this->backdropPost($path, $edit, t('Save configuration'));
     // Reset static cache to update the available languages.
-    drupal_static_reset();
+    backdrop_static_reset();
 
     // Ensure no error messages are shown on the mappings page.
-    $this->drupalGet('admin/structure/feeds/node/mapping');
+    $this->backdropGet('admin/structure/feeds/node/mapping');
 
     // Import content.
     $this->importFile('node', $this->absolutePath() . '/tests/feeds/multilingual_fr.csv');
@@ -534,9 +534,9 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
 
     // Now remove the French language.
     $path = 'admin/config/regional/language/delete/fr';
-    $this->drupalPost($path, array(), t('Delete'));
+    $this->backdropPost($path, array(), t('Delete'));
     // Reset static cache to update the available languages.
-    drupal_static_reset();
+    backdrop_static_reset();
 
     // Import content.
     $this->importFile('node', $this->absolutePath() . '/tests/feeds/multilingual_fr.csv');
@@ -562,12 +562,12 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
   public function testAutocreatedTermLanguage() {
     module_enable(array('i18n_taxonomy'));
     // Make sure that entity info is reset.
-    drupal_flush_all_caches();
-    drupal_static_reset();
+    backdrop_flush_all_caches();
+    backdrop_static_reset();
 
     // Enable multilingual taxonomy.
     $edit = array('i18n_mode' => 4);
-    $this->drupalPost('admin/structure/taxonomy/categories/edit', $edit, 'Save');
+    $this->backdropPost('admin/structure/taxonomy/categories/edit', $edit, 'Save');
 
     // Configure importer to import in French language.
     $this->setSettings('node', 'FeedsNodeProcessor', array(
@@ -687,10 +687,10 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
     $edit = array(
       'enabled[fr]' => FALSE,
     );
-    $this->drupalPost($path, $edit, t('Save configuration'));
+    $this->backdropPost($path, $edit, t('Save configuration'));
 
     // Ensure no error messages are shown on the mappings page.
-    $this->drupalGet('admin/structure/feeds/node/mapping');
+    $this->backdropGet('admin/structure/feeds/node/mapping');
 
     // Import content. Since the French language was disabled, the content
     // should be imported as LANGUAGE_NONE.
@@ -737,7 +737,7 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
     $edit = array(
       'langcode' => $langcode,
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->backdropPost('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText(format_string('The language @language has been created and can now be used.', array('@language' => $label)));
   }
 
@@ -756,19 +756,19 @@ class FeedsMapperMultilingualFieldsTestCase extends FeedsMapperTestCase {
       'entity_translation_hide_translation_links' => 1,
       'entity_translation_node_metadata' => 0,
     );
-    $this->drupalPost('admin/structure/types/manage/' . $typename, $edit, t('Save content type'));
+    $this->backdropPost('admin/structure/types/manage/' . $typename, $edit, t('Save content type'));
 
     // Enable field translation on fields.
     $edit = array(
       'field[translatable]' => 1,
     );
     foreach ($field_names as $field_name) {
-      $this->drupalPost("admin/structure/types/manage/{$typename}/fields/{$field_name}", $edit, t('Save settings'));
+      $this->backdropPost("admin/structure/types/manage/{$typename}/fields/{$field_name}", $edit, t('Save settings'));
     }
 
     // Reset static cache so that all languages are available when
     // field_available_languages() is called during node_load().
-    drupal_static_reset();
+    backdrop_static_reset();
   }
 
   /**

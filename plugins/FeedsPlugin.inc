@@ -53,7 +53,7 @@ abstract class FeedsPlugin extends FeedsConfigurable implements FeedsSourceInter
       throw new InvalidArgumentException(t('Empty configuration identifier.'));
     }
 
-    $instances = &drupal_static(__METHOD__, array());
+    $instances = &backdrop_static(__METHOD__, array());
 
     if (!isset($instances[$class][$id])) {
       $instance = new $class($id);
@@ -164,11 +164,11 @@ abstract class FeedsPlugin extends FeedsConfigurable implements FeedsSourceInter
   public static function loadMappers() {
     static $loaded = FALSE;
     if (!$loaded) {
-      $path = drupal_get_path('module', 'feeds') . '/mappers';
-      $files = drupal_system_listing('/.*\.inc$/', $path, 'name', 0);
+      $path = backdrop_get_path('module', 'feeds') . '/mappers';
+      $files = backdrop_system_listing('/.*\.inc$/', $path, 'name', 0);
       foreach ($files as $file) {
         if (strstr($file->uri, '/mappers/')) {
-          require_once(DRUPAL_ROOT . '/' . $file->uri);
+          require_once(BACKDROP_ROOT . '/' . $file->uri);
         }
       }
     }
@@ -303,7 +303,7 @@ class FeedsMissingPlugin extends FeedsPlugin {
   public function clear(FeedsSource $source) {}
 
   public function request($feed_nid = 0) {
-    drupal_access_denied();
+    backdrop_access_denied();
   }
 
   public function menuItem() {

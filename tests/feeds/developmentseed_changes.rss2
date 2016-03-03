@@ -10,10 +10,10 @@
     <description>&lt;div class=&quot;field field-type-text field-field-subtitle&quot;&gt;
     &lt;div class=&quot;field-items&quot;&gt;
             &lt;div class=&quot;field-item odd&quot;&gt;
-                    &lt;p&gt;A new translation process for Open Atrium and integration with Localize Drupal&lt;/p&gt;        &lt;/div&gt;
+                    &lt;p&gt;A new translation process for Open Atrium and integration with Localize Backdrop&lt;/p&gt;        &lt;/div&gt;
         &lt;/div&gt;
 &lt;/div&gt;
-&lt;div class=&#039;node-body&#039;&gt;&lt;p&gt;The &lt;a href=&quot;http://openatrium.com/&quot;&gt;Open Atrium&lt;/a&gt; &lt;a href=&quot;http://developmentseed.org/blog/2009/jul/16/open-atrium-solving-translation-puzzle&quot;&gt;translation infrastructure&lt;/a&gt; (and Drupal translations in general) are progressing quickly. For Open Atrium to be well translated we first need Drupal&#039;s modules to be translated, so I am splitting efforts at the moment between helping with &lt;a href=&quot;http://localize.drupal.org&quot;&gt;Localize Drupal&lt;/a&gt; and improving &lt;a href=&quot;https://translate.openatrium.com&quot;&gt;Open Atrium Translate&lt;/a&gt;. Already, it is much easier to automatically download your language, get updates from a translation server, protect locally translated strings, and scale the translation system so that translation servers can talk to each other.&lt;/p&gt;
+&lt;div class=&#039;node-body&#039;&gt;&lt;p&gt;The &lt;a href=&quot;http://openatrium.com/&quot;&gt;Open Atrium&lt;/a&gt; &lt;a href=&quot;http://developmentseed.org/blog/2009/jul/16/open-atrium-solving-translation-puzzle&quot;&gt;translation infrastructure&lt;/a&gt; (and Backdrop translations in general) are progressing quickly. For Open Atrium to be well translated we first need Backdrop&#039;s modules to be translated, so I am splitting efforts at the moment between helping with &lt;a href=&quot;http://localize.drupal.org&quot;&gt;Localize Backdrop&lt;/a&gt; and improving &lt;a href=&quot;https://translate.openatrium.com&quot;&gt;Open Atrium Translate&lt;/a&gt;. Already, it is much easier to automatically download your language, get updates from a translation server, protect locally translated strings, and scale the translation system so that translation servers can talk to each other.&lt;/p&gt;
 
 &lt;h1&gt;Automatically download your language&lt;/h1&gt;
 
@@ -31,14 +31,14 @@
 
 &lt;p&gt;In a word, nothing. There has been a major improvement on this front. Now your translations are tracked and won&#039;t be overwritten by someone else&#039;s translations when you update, unless you choose for them to be. This means that you can contribute your translations, benefit from others contributing theirs, and make the world a better (translated) place, without loosing any custom work that you want. Let the translations flow!&lt;/p&gt;&lt;/div&gt;</description>
      <comments>http://developmentseed.org/blog/2009/oct/06/open-atrium-translation-workflow-two-way-updating#comments</comments>
- <category domain="http://developmentseed.org/tags/drupal">Drupal</category>
+ <category domain="http://developmentseed.org/tags/backdrop">Backdrop</category>
  <category domain="http://developmentseed.org/tags/localization">localization</category>
  <category domain="http://developmentseed.org/tags/localization-client">localization client</category>
  <category domain="http://developmentseed.org/tags/localization-server">localization server</category>
  <category domain="http://developmentseed.org/tags/open-atrium">open atrium</category>
  <category domain="http://developmentseed.org/tags/translation">translation</category>
  <category domain="http://developmentseed.org/tags/translation-server">translation server</category>
- <category domain="http://developmentseed.org/channel/drupal-planet">Drupal planet</category>
+ <category domain="http://developmentseed.org/channel/backdrop-planet">Backdrop planet</category>
  <pubDate>Tue, 06 Oct 2009 15:21:48 +0000</pubDate>
  <dc:creator>Development Seed</dc:creator>
  <guid isPermaLink="false">974 at http://developmentseed.org</guid>
@@ -49,7 +49,7 @@
     <description>&lt;div class=&quot;field field-type-text field-field-subtitle&quot;&gt;
     &lt;div class=&quot;field-items&quot;&gt;
             &lt;div class=&quot;field-item odd&quot;&gt;
-                    &lt;p&gt;Drupal, PHP, and Mapping This Week in Washington, DC&lt;/p&gt;        &lt;/div&gt;
+                    &lt;p&gt;Backdrop, PHP, and Mapping This Week in Washington, DC&lt;/p&gt;        &lt;/div&gt;
         &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#039;node-body&#039;&gt;&lt;p&gt;&lt;img src=&quot;http://developmentseed.org/sites/developmentseed.org/files/dctech2_0_0.png&quot; alt=&quot;Week in DC Tech&quot; /&gt;&lt;/p&gt;
@@ -60,7 +60,7 @@
 
 &lt;p&gt;6:30 pm&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://drupal.meetup.com/21/calendar/11332695/&quot;&gt;&lt;strong&gt;NOVA Drupal Meetup&lt;/strong&gt;&lt;/a&gt;: Are you a Drupal developer, use a Drupal site, or just want to learn more about the open source content management system? Come out for this meetup to meet other Drupal fans and hear how people are using the CMS.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://backdrop.meetup.com/21/calendar/11332695/&quot;&gt;&lt;strong&gt;NOVA Backdrop Meetup&lt;/strong&gt;&lt;/a&gt;: Are you a Backdrop developer, use a Backdrop site, or just want to learn more about the open source content management system? Come out for this meetup to meet other Backdrop fans and hear how people are using the CMS.&lt;/p&gt;
 
 &lt;p&gt;6:30 pm&lt;/p&gt;
 
@@ -95,14 +95,14 @@
 &lt;p&gt;&lt;img src=&quot;http://farm3.static.flickr.com/2600/3974644162_a44cc3a89a.jpg&quot; alt=&quot;Add new facets to the search to further customize the map&quot; /&gt;&lt;/p&gt;&lt;/div&gt;</description>
      <comments>http://developmentseed.org/blog/2009/oct/02/mapping-innovation-world-bank-open-atrium#comments</comments>
  <category domain="http://developmentseed.org/tags/custom-mapping">custom mapping</category>
- <category domain="http://developmentseed.org/tags/drupal">Drupal</category>
+ <category domain="http://developmentseed.org/tags/backdrop">Backdrop</category>
  <category domain="http://developmentseed.org/tags/faceted-search">faceted search</category>
  <category domain="http://developmentseed.org/tags/intranet">intranet</category>
  <category domain="http://developmentseed.org/tags/map-basec-browser">map-basec browser</category>
  <category domain="http://developmentseed.org/tags/mapbox">mapbox</category>
  <category domain="http://developmentseed.org/tags/open-atrium">open atrium</category>
  <category domain="http://developmentseed.org/tags/world-bank">World Bank</category>
- <category domain="http://developmentseed.org/channel/drupal-planet">Drupal planet</category>
+ <category domain="http://developmentseed.org/channel/backdrop-planet">Backdrop planet</category>
  <pubDate>Fri, 02 Oct 2009 14:31:04 +0000</pubDate>
  <dc:creator>Development Seed</dc:creator>
  <guid isPermaLink="false">972 at http://developmentseed.org</guid>
@@ -179,7 +179,7 @@
  <category domain="http://developmentseed.org/tags/mix-market">MIX Market</category>
  <category domain="http://developmentseed.org/tags/open-data">open data</category>
  <category domain="http://developmentseed.org/tags/salesforce">salesforce</category>
- <category domain="http://developmentseed.org/channel/drupal-planet">Drupal planet</category>
+ <category domain="http://developmentseed.org/channel/backdrop-planet">Backdrop planet</category>
  <pubDate>Thu, 24 Sep 2009 13:09:10 +0000</pubDate>
  <dc:creator>Development Seed</dc:creator>
  <guid isPermaLink="false">969 at http://developmentseed.org</guid>
@@ -190,23 +190,23 @@
     <description>&lt;div class=&quot;field field-type-text field-field-subtitle&quot;&gt;
     &lt;div class=&quot;field-items&quot;&gt;
             &lt;div class=&quot;field-item odd&quot;&gt;
-                    &lt;p&gt;Upgraded Siteminder Module in Drupal allows for better integration with Siteminder  &lt;/p&gt;        &lt;/div&gt;
+                    &lt;p&gt;Upgraded Siteminder Module in Backdrop allows for better integration with Siteminder  &lt;/p&gt;        &lt;/div&gt;
         &lt;/div&gt;
 &lt;/div&gt;
-&lt;div class=&#039;node-body&#039;&gt;&lt;p&gt;In &lt;a href=&quot;http://developmentseed.org/blog/2009/sep/08/custom-open-atrium-intranet-launches-world-bank&quot;&gt;our recent work on the World Bank&#039;s Communicate intranet&lt;/a&gt;, we needed to integrate the &lt;a href=&quot;http://www.ca.com/us/internet-access-control.aspx&quot;&gt;Siteminder access system&lt;/a&gt; into the &lt;a href=&quot;http://openatrium.com/&quot;&gt;Open Atrium&lt;/a&gt;-based intranet &quot;Communicate&quot; to allow World Bank staff to use the same single sign-on credentials that they use to access all their internal web systems. To do this, we upgraded the Siteminder module for Drupal. You can download the &lt;a href=&quot;http://drupal.org/project/siteminder&quot;&gt;new module from its Drupal project page&lt;/a&gt; and &lt;a href=&quot;http://cvs.drupal.org/viewvc.py/drupal/contributions/modules/siteminder/README.txt?revision=1.2&amp;amp;view=markup&amp;amp;pathrev=DRUPAL-6--1-0-ALPHA1&quot;&gt;learn more about its API and how to write your own Siteminder plugin in its documentation&lt;/a&gt; and from reading the module&#039;s code. First, here is a little more background on the changes.&lt;/p&gt;
+&lt;div class=&#039;node-body&#039;&gt;&lt;p&gt;In &lt;a href=&quot;http://developmentseed.org/blog/2009/sep/08/custom-open-atrium-intranet-launches-world-bank&quot;&gt;our recent work on the World Bank&#039;s Communicate intranet&lt;/a&gt;, we needed to integrate the &lt;a href=&quot;http://www.ca.com/us/internet-access-control.aspx&quot;&gt;Siteminder access system&lt;/a&gt; into the &lt;a href=&quot;http://openatrium.com/&quot;&gt;Open Atrium&lt;/a&gt;-based intranet &quot;Communicate&quot; to allow World Bank staff to use the same single sign-on credentials that they use to access all their internal web systems. To do this, we upgraded the Siteminder module for Backdrop. You can download the &lt;a href=&quot;http://drupal.org/project/siteminder&quot;&gt;new module from its Backdrop project page&lt;/a&gt; and &lt;a href=&quot;http://cvs.drupal.org/viewvc.py/backdrop/contributions/modules/siteminder/README.txt?revision=1.2&amp;amp;view=markup&amp;amp;pathrev=BACKDROP-6--1-0-ALPHA1&quot;&gt;learn more about its API and how to write your own Siteminder plugin in its documentation&lt;/a&gt; and from reading the module&#039;s code. First, here is a little more background on the changes.&lt;/p&gt;
 
-&lt;p&gt;The Siteminder system, from &lt;a href=&quot;http://www.ca.com/us/&quot;&gt;Computer Associates&lt;/a&gt;, is used by many enterprise-level organizations to authenticate signing on to their web resources. How it works is that you can designate a site - like an Open Atrium powered intranet - to be protected by the Siteminder system. Once a site is protected by Siteminder, all traffic to that site is routed through Siteminder first and then on to the actual site. Siteminder sets certain HTTP headers in the user&#039;s request, and Drupal can then examine them to determine credentials. What the Drupal Siteminder module does is map the Siteminder header values to Drupal users and allow a user to login based on the headers they send.&lt;/p&gt;
+&lt;p&gt;The Siteminder system, from &lt;a href=&quot;http://www.ca.com/us/&quot;&gt;Computer Associates&lt;/a&gt;, is used by many enterprise-level organizations to authenticate signing on to their web resources. How it works is that you can designate a site - like an Open Atrium powered intranet - to be protected by the Siteminder system. Once a site is protected by Siteminder, all traffic to that site is routed through Siteminder first and then on to the actual site. Siteminder sets certain HTTP headers in the user&#039;s request, and Backdrop can then examine them to determine credentials. What the Backdrop Siteminder module does is map the Siteminder header values to Backdrop users and allow a user to login based on the headers they send.&lt;/p&gt;
 
 &lt;p&gt;In addition to authentication, the Siteminder system also stores other information about users. When the Siteminder system sends HTTP headers for authentication, it can also send information about a user - like her name, email address, phone number, and so on. We wanted to be able to pull this information into the intranet too. To achieve this, we re-wrote the Siteminder module in such a way that it&#039;s easy to write a plugin module to provide the fields to which you&#039;d like to map this extra Siteminder meta information and to determine how this information is processed and saved. To do this for the World Bank&#039;s intranet, we built the Siteminder Profile module, which lets you pick a CCK node type to serve as the target content profile for a user as well as select a few taxonomy vocabularies. Then by using the main module&#039;s administrative interface, you can choose which Siteminder headers should get mapped to which CCK fields and vocabularies based on the designated node type and vocabularies you selected in the Siteminder Profile settings page.&lt;/p&gt;
 
 &lt;p&gt;But what happens if a person&#039;s information changes in the Siteminder database - for example if they change phone numbers or office buildings? The Siteminder module now has built-in capability and an API to check whether values in users&#039; profiles have changed in the Siteminder system. The Siteminder Profile module uses this API and saves a new version of a user&#039;s profile if it detects that a value has changed in the Siteminder system database.&lt;/p&gt;&lt;/div&gt;</description>
      <comments>http://developmentseed.org/blog/2009/sep/22/integrating-siteminder-access-system-open-atrium-based-intranet#comments</comments>
  <category domain="http://developmentseed.org/tags/authentication">authentication</category>
- <category domain="http://developmentseed.org/tags/drupal">Drupal</category>
+ <category domain="http://developmentseed.org/tags/backdrop">Backdrop</category>
  <category domain="http://developmentseed.org/tags/open-atrium">open atrium</category>
  <category domain="http://developmentseed.org/tags/siteminder">siteminder</category>
  <category domain="http://developmentseed.org/tags/siteminder-module">siteminder module</category>
- <category domain="http://developmentseed.org/channel/drupal-planet">Drupal planet</category>
+ <category domain="http://developmentseed.org/channel/backdrop-planet">Backdrop planet</category>
  <pubDate>Tue, 22 Sep 2009 18:02:21 +0000</pubDate>
  <dc:creator>Development Seed</dc:creator>
  <guid isPermaLink="false">964 at http://developmentseed.org</guid>
@@ -242,16 +242,16 @@
   <item>
     <title>Peru&#039;s Software Freedom Day: Impressions and Photos</title>
     <link>http://developmentseed.org/blog/2009/sep/21/perus-software-freedom-day-impressions-and-photos</link>
-    <description>&lt;div class=&#039;node-body&#039;&gt;&lt;p&gt;There was a great turn out a &lt;a href=&quot;http://www.sfdperu.org/&quot;&gt;Software Freedom Day&lt;/a&gt; this weekend with 400 people in attendance and a solid 30 presentations. The &lt;a href=&quot;http://developmentseed.org/blog/2009/sep/15/preparing-perus-software-freedom-day-talks-drupal-features-and-open-atrium&quot;&gt;presentations in the Drupal track&lt;/a&gt; were some of the best attended sessions of the day. To get a sense of Drupal&#039;s traction down here, &quot;Drupal&quot; was mentioned in many sessions and conversations throughout the day, and not just by the people working directly with Drupal.&lt;/p&gt;
+    <description>&lt;div class=&#039;node-body&#039;&gt;&lt;p&gt;There was a great turn out a &lt;a href=&quot;http://www.sfdperu.org/&quot;&gt;Software Freedom Day&lt;/a&gt; this weekend with 400 people in attendance and a solid 30 presentations. The &lt;a href=&quot;http://developmentseed.org/blog/2009/sep/15/preparing-perus-software-freedom-day-talks-backdrop-features-and-open-atrium&quot;&gt;presentations in the Backdrop track&lt;/a&gt; were some of the best attended sessions of the day. To get a sense of Backdrop&#039;s traction down here, &quot;Backdrop&quot; was mentioned in many sessions and conversations throughout the day, and not just by the people working directly with Backdrop.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://farm3.static.flickr.com/2653/3940335249_57ce995a84.jpg&quot; alt=&quot;Presenting on Features in Drupal and Managing News&quot; /&gt;
-&lt;em&gt;Presenting on Features in Drupal and Managing News&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://farm3.static.flickr.com/2653/3940335249_57ce995a84.jpg&quot; alt=&quot;Presenting on Features in Backdrop and Managing News&quot; /&gt;
+&lt;em&gt;Presenting on Features in Backdrop and Managing News&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;I had a great time meeting people and learning about the work being done in the different open source communities here in Peru. Software Freedom Day is becoming an annual event in Peru, and there were many discussions on improving the event for next year as well as keeping the energy going to improve the image of open source software in the country. It&#039;s great to see the community looking forward like this, and I&#039;m excited to help keep the open source movement growing in Peru.&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;http://www.flickr.com/photos/developmentseed/sets/72157622423999830/&quot;&gt;More photos from the event here.&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description>
      <comments>http://developmentseed.org/blog/2009/sep/21/perus-software-freedom-day-impressions-and-photos#comments</comments>
- <category domain="http://developmentseed.org/tags/drupal">Drupal</category>
+ <category domain="http://developmentseed.org/tags/backdrop">Backdrop</category>
  <category domain="http://developmentseed.org/tags/open-source">open source</category>
  <category domain="http://developmentseed.org/tags/peru">Peru</category>
  <category domain="http://developmentseed.org/tags/software-freedom-day">software freedom day</category>
@@ -286,11 +286,11 @@
 
 &lt;p&gt;&lt;img src=&quot;http://farm3.static.flickr.com/2654/3928674449_8f443df1b3.jpg&quot; alt=&quot;Togglable Open Atrium UI adjustments&quot; /&gt;&lt;/p&gt;&lt;/div&gt;</description>
      <comments>http://developmentseed.org/blog/2009/sep/18/scaling-open-atrium-ui#comments</comments>
- <category domain="http://developmentseed.org/tags/drupal">Drupal</category>
+ <category domain="http://developmentseed.org/tags/backdrop">Backdrop</category>
  <category domain="http://developmentseed.org/tags/interface">interface</category>
  <category domain="http://developmentseed.org/tags/open-atrium">open atrium</category>
  <category domain="http://developmentseed.org/tags/usability">usability</category>
- <category domain="http://developmentseed.org/channel/drupal-planet">Drupal planet</category>
+ <category domain="http://developmentseed.org/channel/backdrop-planet">Backdrop planet</category>
  <pubDate>Fri, 18 Sep 2009 14:31:23 +0000</pubDate>
  <dc:creator>Development Seed</dc:creator>
  <guid isPermaLink="false">966 at http://developmentseed.org</guid>

@@ -6,7 +6,7 @@
  */
 
 /**
- * Option for handling content in Drupal but not in source data (unpublish
+ * Option for handling content in Backdrop but not in source data (unpublish
  * instead of skip/delete).
  */
 define('FEEDS_UNPUBLISH_NON_EXISTENT', 'unpublish');
@@ -194,7 +194,7 @@ class FeedsNodeProcessor extends FeedsProcessor {
       '#description' => t('Check that the author has permission to create the node.'),
       '#default_value' => $this->config['authorize'],
     );
-    $period = drupal_map_assoc(array(FEEDS_EXPIRE_NEVER, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000, 2592000 * 3, 2592000 * 6, 31536000), 'feeds_format_expire');
+    $period = backdrop_map_assoc(array(FEEDS_EXPIRE_NEVER, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000, 2592000 * 3, 2592000 * 6, 31536000), 'feeds_format_expire');
     $form['expire'] = array(
       '#type' => 'select',
       '#title' => t('Expire nodes'),
@@ -288,16 +288,16 @@ class FeedsNodeProcessor extends FeedsProcessor {
     }
     $targets['nid'] = array(
       'name' => t('Node ID'),
-      'description' => t('The nid of the node. NOTE: use this feature with care, node ids are usually assigned by Drupal.'),
+      'description' => t('The nid of the node. NOTE: use this feature with care, node ids are usually assigned by Backdrop.'),
       'optional_unique' => TRUE,
     );
     $targets['uid'] = array(
       'name' => t('User ID'),
-      'description' => t('The Drupal user ID of the node author.'),
+      'description' => t('The Backdrop user ID of the node author.'),
     );
     $targets['user_name'] = array(
       'name' => t('Username'),
-      'description' => t('The Drupal username of the node author.'),
+      'description' => t('The Backdrop username of the node author.'),
     );
     $targets['user_mail'] = array(
       'name' => t('User email'),

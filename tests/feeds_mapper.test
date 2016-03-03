@@ -118,7 +118,7 @@ class FeedsMapperTestCase extends FeedsWebTestCase {
    *
    * @param $settings
    *   (Optional) An array of settings to pass through to
-   *   drupalCreateContentType().
+   *   backdropCreateContentType().
    * @param $fields
    *   (Optional) an keyed array of $field_name => $field_type used to add additional
    *   fields to the new content type.
@@ -126,10 +126,10 @@ class FeedsMapperTestCase extends FeedsWebTestCase {
    * @return
    *   The machine name of the new content type.
    *
-   * @see DrupalWebTestCase::drupalCreateContentType()
+   * @see BackdropWebTestCase::backdropCreateContentType()
    */
   final protected function createContentType(array $settings = array(), array $fields = array()) {
-    $type = $this->drupalCreateContentType($settings);
+    $type = $this->backdropCreateContentType($settings);
     $typename = $type->type;
 
     $admin_type_url = 'admin/structure/types/manage/' . str_replace('_', '-', $typename);
@@ -149,15 +149,15 @@ class FeedsMapperTestCase extends FeedsWebTestCase {
         'fields[_add_new_field][type]' => $field_type,
         'fields[_add_new_field][widget_type]' => $field_widget,
       );
-      $this->drupalPost($admin_type_url . '/fields', $edit, 'Save');
+      $this->backdropPost($admin_type_url . '/fields', $edit, 'Save');
 
       // (Default) Configure the field.
       $edit = isset($options['settings']) ? $options['settings'] : array();
-      $this->drupalPost(NULL, $edit, 'Save field settings');
+      $this->backdropPost(NULL, $edit, 'Save field settings');
       $this->assertText('Updated field ' . $label . ' field settings.');
 
       $edit = isset($options['instance_settings']) ? $options['instance_settings'] : array();
-      $this->drupalPost(NULL, $edit, 'Save settings');
+      $this->backdropPost(NULL, $edit, 'Save settings');
       $this->assertText('Saved ' . $label . ' configuration.');
     }
 

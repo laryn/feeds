@@ -74,7 +74,7 @@ function taxonomy_feeds_processor_targets($entity_type, $bundle_name) {
   }
   if ($entity_type == 'taxonomy_term') {
     $targets['tid']['name'] = t('Term id');
-    $targets['tid']['description'] = t('The tid of the taxonomy term. NOTE: use this feature with care, node ids are usually assigned by Drupal.');
+    $targets['tid']['description'] = t('The tid of the taxonomy term. NOTE: use this feature with care, node ids are usually assigned by Backdrop.');
     unset($targets['vocabulary']);
   }
 
@@ -95,7 +95,7 @@ function taxonomy_feeds_set_target(FeedsSource $source, $entity, $target, array 
 
   $info = field_info_field($target);
 
-  $cache = &drupal_static(__FUNCTION__);
+  $cache = &backdrop_static(__FUNCTION__);
   if (!isset($cache['allowed_values'][$target])) {
     $cache['allowed_values'][$target] = taxonomy_allowed_values($info);
   }
@@ -161,7 +161,7 @@ function taxonomy_feeds_set_target(FeedsSource $source, $entity, $target, array 
           }
           elseif ($mapping['autocreate'] && strlen($term)) {
             $term = (object) array(
-              'name' => drupal_substr($term, 0, 255),
+              'name' => backdrop_substr($term, 0, 255),
               'vid' => key($cache['allowed_vocabularies'][$target]),
               'vocabulary_machine_name' => reset($cache['allowed_vocabularies'][$target]),
             );
@@ -206,7 +206,7 @@ function taxonomy_feeds_set_target(FeedsSource $source, $entity, $target, array 
  * Finds all terms associated with the given node, within one vocabulary.
  */
 function taxonomy_feeds_node_get_terms($node, $key = 'tid') {
-  $terms = &drupal_static(__FUNCTION__);
+  $terms = &backdrop_static(__FUNCTION__);
 
   if (!isset($terms[$node->nid][$key])) {
     // Get tids from all taxonomy_term_reference fields.

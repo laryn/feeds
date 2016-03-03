@@ -8,11 +8,11 @@
 /**
  * Test aggregating a feed as node items.
  *
- * Using DrupalWebTestCase as DrupalUnitTestCase is broken in SimpleTest 2.8.
+ * Using BackdropWebTestCase as BackdropUnitTestCase is broken in SimpleTest 2.8.
  * Not inheriting from Feeds base class as ParserCSV should be moved out of
  * Feeds at some time.
  */
-class ParserCSVTest extends DrupalWebTestCase  {
+class ParserCSVTest extends BackdropWebTestCase  {
   protected $profile = 'testing';
 
   public static function getInfo() {
@@ -27,7 +27,7 @@ class ParserCSVTest extends DrupalWebTestCase  {
    * Test method.
    */
   public function test() {
-    drupal_load('module', 'feeds');
+    backdrop_load('module', 'feeds');
     feeds_include_library('ParserCSV.inc', 'ParserCSV');
 
     $this->_testSimple();
@@ -135,7 +135,7 @@ class ParserCSVTest extends DrupalWebTestCase  {
    * Absolute path to feeds.
    */
   public function absolutePath() {
-    return DRUPAL_ROOT . '/' . drupal_get_path('module', 'feeds');
+    return BACKDROP_ROOT . '/' . backdrop_get_path('module', 'feeds');
   }
 
   static function getDelimiters() {

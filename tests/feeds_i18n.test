@@ -37,12 +37,12 @@ class Feedsi18nTestCase extends FeedsMapperTestCase {
     $edit = array(
       'langcode' => 'nl',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->backdropPost('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText(t('The language Dutch has been created and can now be used.'));
     $edit = array(
       'langcode' => 'de',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->backdropPost('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText(t('The language German has been created and can now be used.'));
 
     // Include FeedsProcessor.inc to make its constants available.
@@ -99,7 +99,7 @@ class Feedsi18nTestCase extends FeedsMapperTestCase {
     $edit = array(
       'enabled[de]' => FALSE,
     );
-    $this->drupalPost($path, $edit, t('Save configuration'));
+    $this->backdropPost($path, $edit, t('Save configuration'));
 
     // Import content.
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');
@@ -118,7 +118,7 @@ class Feedsi18nTestCase extends FeedsMapperTestCase {
   public function testRemovedLanguage() {
     // Remove the German language.
     $path = 'admin/config/regional/language/delete/de';
-    $this->drupalPost($path, array(), t('Delete'));
+    $this->backdropPost($path, array(), t('Delete'));
 
     // Import content.
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');

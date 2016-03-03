@@ -34,7 +34,7 @@ class FeedsFetcherResult extends FeedsResult {
    * Get a path to a temporary file containing the resource provided by the
    * fetcher.
    *
-   * File will be deleted after DRUPAL_MAXIMUM_TEMP_FILE_AGE.
+   * File will be deleted after BACKDROP_MAXIMUM_TEMP_FILE_AGE.
    *
    * @return
    *   A path to a file containing the raw content as a source.
@@ -152,7 +152,7 @@ abstract class FeedsFetcher extends FeedsPlugin {
    *   A string to be returned to the client.
    */
   public function request($feed_nid = 0) {
-    drupal_access_denied();
+    backdrop_access_denied();
   }
 
   /**
@@ -179,8 +179,8 @@ abstract class FeedsFetcher extends FeedsPlugin {
    * Requests to this menu item will be routed to FeedsFetcher::request().
    *
    * @return
-   *   An array where the key is the Drupal menu item path and the value is
-   *   a valid Drupal menu item definition.
+   *   An array where the key is the Backdrop menu item path and the value is
+   *   a valid Backdrop menu item definition.
    */
   public function menuItem() {
     return array(

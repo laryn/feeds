@@ -18,7 +18,7 @@ class feeds_views_handler_field_log_message extends views_handler_field {
     $variables = unserialize($values->{$this->aliases['variables']});
 
     // Messages that are too long may generate a PDO exception when calling t()
-    // if Drupal tries to add them in {locales_source} table.
+    // if Backdrop tries to add them in {locales_source} table.
     return t(truncate_utf8($message, 65000, TRUE, TRUE), $variables);
   }
 

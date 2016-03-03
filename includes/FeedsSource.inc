@@ -198,7 +198,7 @@ class FeedsSource extends FeedsConfigurable {
   public static function instance($importer_id, $feed_nid) {
     $class = config_get('feeds.settings', 'feeds_source_class');
 
-    $instances = &drupal_static(__METHOD__, array());
+    $instances = &backdrop_static(__METHOD__, array());
 
     if (!isset($instances[$class][$importer_id][$feed_nid])) {
       $instances[$class][$importer_id][$feed_nid] = new $class($importer_id, $feed_nid);
@@ -316,7 +316,7 @@ class FeedsSource extends FeedsConfigurable {
     else {
       // Feed is not fully imported yet, so we put this job back in the queue
       // immediately for further processing.
-      $queue = DrupalQueue::get('feeds_source_import');
+      $queue = BackdropQueue::get('feeds_source_import');
       $queue->createItem($job);
     }
   }
@@ -636,10 +636,10 @@ class FeedsSource extends FeedsConfigurable {
       'fetcher_result' => isset($this->fetcher_result) ? $this->fetcher_result : FALSE,
     );
     if (db_query_range("SELECT 1 FROM {feeds_source} WHERE id = :id AND feed_nid = :nid", 0, 1, array(':id' => $this->id, ':nid' => $this->feed_nid))->fetchField()) {
-      drupal_write_record('feeds_source', $object, array('id', 'feed_nid'));
+      backdrop_write_record('feeds_source', $object, array('id', 'feed_nid'));
     }
     else {
-      drupal_write_record('feeds_source', $object);
+      backdrop_write_record('feeds_source', $object);
     }
   }
 

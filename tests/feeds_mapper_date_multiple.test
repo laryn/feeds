@@ -31,7 +31,7 @@ class FeedsMapperDateMultipleTestCase extends FeedsMapperTestCase {
    * Testing import by loading a 4 item XML file.
    */
   public function test() {
-    $this->drupalGet('admin/config/regional/settings');
+    $this->backdropGet('admin/config/regional/settings');
 
     // Create content type.
     $typename = $this->createContentType(array(), array(
@@ -41,7 +41,7 @@ class FeedsMapperDateMultipleTestCase extends FeedsMapperTestCase {
     $edit = array(
       'field[cardinality]' => -1,
     );
-    $this->drupalPost('admin/structure/types/manage/' . $typename . '/fields/field_date', $edit, 'Save settings');
+    $this->backdropPost('admin/structure/types/manage/' . $typename . '/fields/field_date', $edit, 'Save settings');
     $this->assertText('Saved date_date_label configuration');
 
     // Create and configure importer.
@@ -110,7 +110,7 @@ class FeedsMapperDateMultipleTestCase extends FeedsMapperTestCase {
       )
     );
     foreach ($values as $v => $key) {
-      $this->drupalGet("node/$v/edit");
+      $this->backdropGet("node/$v/edit");
       foreach ($key as $delta => $value) {
         $this->assertFieldById('edit-field-date-und-' . $delta . '-value-date', $value);
       }

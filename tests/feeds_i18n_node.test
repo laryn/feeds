@@ -60,12 +60,12 @@ class Feedsi18nNodeTestCase extends Feedsi18nTestCase {
    */
   public function testAvailableProcessorLanguageSetting() {
     // Check if the language setting is available when the locale module is enabled.
-    $this->drupalGet('admin/structure/feeds/i18n/settings/FeedsNodeProcessor');
+    $this->backdropGet('admin/structure/feeds/i18n/settings/FeedsNodeProcessor');
     $this->assertField('language', 'Language field is available on the node processor settings when the locale module is enabled.');
 
     // Disable the locale module and check if the language setting is no longer available.
     module_disable(array('locale'));
-    $this->drupalGet('admin/structure/feeds/i18n/settings/FeedsNodeProcessor');
+    $this->backdropGet('admin/structure/feeds/i18n/settings/FeedsNodeProcessor');
     $this->assertNoField('language', 'Language field is not available on the node processor settings when the locale module is disabled.');
   }
 
@@ -99,8 +99,8 @@ class Feedsi18nNodeTestCase extends Feedsi18nTestCase {
   public function testDisabledLocaleModule() {
     module_disable(array('locale'));
     // Make sure that entity info is reset.
-    drupal_flush_all_caches();
-    drupal_static_reset();
+    backdrop_flush_all_caches();
+    backdrop_static_reset();
 
     // Import content.
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');
@@ -118,10 +118,10 @@ class Feedsi18nNodeTestCase extends Feedsi18nTestCase {
    */
   public function testUninstalledLocaleModule() {
     module_disable(array('locale'));
-    drupal_uninstall_modules(array('locale'));
+    backdrop_uninstall_modules(array('locale'));
     // Make sure that entity info is reset.
-    drupal_flush_all_caches();
-    drupal_static_reset();
+    backdrop_flush_all_caches();
+    backdrop_static_reset();
 
     // Import content.
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');

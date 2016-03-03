@@ -193,7 +193,7 @@ function feeds_batch($method, $importer_id, $feed_nid = 0, &$context) {
     $context['finished'] = feeds_source($importer_id, $feed_nid)->$method();
   }
   catch (Exception $e) {
-    drupal_set_message($e->getMessage(), 'error');
+    backdrop_set_message($e->getMessage(), 'error');
   }
 }
 
@@ -287,7 +287,7 @@ function feeds_menu() {
   $items['import/%feeds_importer'] = array(
     'title callback' => 'feeds_importer_title',
     'title arguments' => array(1),
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('feeds_import_form', 1),
     'access callback' => 'feeds_access',
     'access arguments' => array('import', 1),
@@ -300,7 +300,7 @@ function feeds_menu() {
   );
   $items['import/%feeds_importer/delete-items'] = array(
     'title' => 'Delete items',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('feeds_delete_tab_form', 1),
     'access callback' => 'feeds_access',
     'access arguments' => array('clear', 1),
@@ -309,7 +309,7 @@ function feeds_menu() {
   );
   $items['import/%feeds_importer/unlock'] = array(
     'title' => 'Unlock',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('feeds_unlock_tab_form', 1),
     'access callback' => 'feeds_access',
     'access arguments' => array('unlock', 1),
@@ -326,7 +326,7 @@ function feeds_menu() {
   );
   $items['node/%node/import'] = array(
     'title' => 'Import',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('feeds_import_tab_form', 1),
     'access callback' => 'feeds_access',
     'access arguments' => array('import', 1),
@@ -336,7 +336,7 @@ function feeds_menu() {
   );
   $items['node/%node/delete-items'] = array(
     'title' => 'Delete items',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('feeds_delete_tab_form', NULL, 1),
     'access callback' => 'feeds_access',
     'access arguments' => array('clear', 1),
@@ -346,7 +346,7 @@ function feeds_menu() {
   );
   $items['node/%node/unlock'] = array(
     'title' => 'Unlock',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('feeds_unlock_tab_form', NULL, 1),
     'access callback' => 'feeds_access',
     'access arguments' => array('unlock', 1),
@@ -492,7 +492,7 @@ function feeds_exit() {
     $job['fetcher']->subscribe($job['source']);
   }
 
-  if (drupal_static('feeds_log_error', FALSE)) {
+  if (backdrop_static('feeds_log_error', FALSE)) {
     watchdog('feeds', 'Feeds reported errors, visit the Feeds log for details.', array(), WATCHDOG_ERROR, 'admin/reports/dblog/feeds');
   }
 }
@@ -503,7 +503,7 @@ function feeds_exit() {
 function feeds_views_api() {
   return array(
     'api' => 3,
-    'path' => drupal_get_path('module', 'feeds') . '/views',
+    'path' => backdrop_get_path('module', 'feeds') . '/views',
   );
 }
 
@@ -592,8 +592,8 @@ function feeds_node_validate($node, $form, &$form_state) {
   // Keep a copy of the title for subsequent node creation stages.
   // @todo: revisit whether $node still looses all of its properties
   // between validate and insert stage.
-  $last_title = &drupal_static('feeds_node_last_title');
-  $last_feeds = &drupal_static('feeds_node_last_feeds');
+  $last_title = &backdrop_static('feeds_node_last_title');
+  $last_feeds = &backdrop_static('feeds_node_last_feeds');
 
   // On validation stage we are working with a FeedsSource object that is
   // not tied to a nid - when creating a new node there is no
@@ -615,7 +615,7 @@ function feeds_node_validate($node, $form, &$form_state) {
       }
     }
     catch (Exception $e) {
-      drupal_set_message($e->getMessage(), 'error');
+      backdrop_set_message($e->getMessage(), 'error');
       form_set_error('title', t('Could not retrieve title from feed.'));
     }
   }
@@ -626,8 +626,8 @@ function feeds_node_validate($node, $form, &$form_state) {
  */
 function feeds_node_presave($node) {
   // Populate $node->title and $node->feed from result of validation phase.
-  $last_title = &drupal_static('feeds_node_last_title');
-  $last_feeds = &drupal_static('feeds_node_last_feeds');
+  $last_title = &backdrop_static('feeds_node_last_title');
+  $last_feeds = &backdrop_static('feeds_node_last_feeds');
   if (empty($node->title) && !empty($last_title)) {
     $node->title = $last_title;
   }
@@ -827,7 +827,7 @@ function feeds_module_implements_alter(array &$implementations, $hook) {
 function _feeds_feeds_processor_targets_alter(array &$targets, $entity_type, $bundle) {
   // If hook_feeds_processor_targets() hasn't been called, for instance, by
   // older processors, invoke it ourself.
-  if (!drupal_static('feeds_feeds_processor_targets', FALSE)) {
+  if (!backdrop_static('feeds_feeds_processor_targets', FALSE)) {
     $targets += module_invoke_all('feeds_processor_targets', $entity_type, $bundle);
   }
 }
@@ -838,9 +838,9 @@ function _feeds_feeds_processor_targets_alter(array &$targets, $entity_type, $bu
 function feeds_flush_caches() {
   // The update to add the table needs to have run. Taken from
   // https://www.drupal.org/node/2511858
-  include_once DRUPAL_ROOT . '/includes/install.inc';
+  include_once BACKDROP_ROOT . '/includes/install.inc';
 
-  if (drupal_get_installed_schema_version('feeds') >= 7212) {
+  if (backdrop_get_installed_schema_version('feeds') >= 7212) {
     return array('cache_feeds_http');
   }
   return array();
@@ -927,7 +927,7 @@ function feeds_get_importer_id($content_type) {
  * Helper function for feeds_get_importer_id() and feeds_enabled_importers().
  */
 function _feeds_importer_digest() {
-  $importers = &drupal_static(__FUNCTION__);
+  $importers = &backdrop_static(__FUNCTION__);
   if ($importers === NULL) {
     if ($cache = cache_get(__FUNCTION__)) {
       $importers = $cache->data;
@@ -948,10 +948,10 @@ function _feeds_importer_digest() {
  */
 function feeds_cache_clear($rebuild_menu = TRUE) {
   cache_clear_all('_feeds_importer_digest', 'cache');
-  drupal_static_reset('_feeds_importer_digest');
+  backdrop_static_reset('_feeds_importer_digest');
   cache_clear_all('plugins:feeds:plugins', 'cache');
   feeds_load_importer_object_reset('feeds_importer');
-  drupal_static_reset('_node_types_build');
+  backdrop_static_reset('_node_types_build');
   $cache = &backdrop_static('backdrop_tools_export_load_object');
   $cached_database = &backdrop_static('backdrop_tools_export_load_object_all');
   $cached_defaults = &backdrop_static('_ctools_export_get_defaults');
@@ -993,7 +993,7 @@ function feeds_dbg($msg) {
  */
 function feeds_log($importer_id, $feed_nid, $type, $message, $variables = array(), $severity = WATCHDOG_NOTICE) {
   if ($severity < WATCHDOG_NOTICE) {
-    $error = &drupal_static('feeds_log_error', FALSE);
+    $error = &backdrop_static('feeds_log_error', FALSE);
     $error = TRUE;
   }
   db_insert('feeds_log')
@@ -1032,7 +1032,7 @@ function feeds_item_info_load($entity_type, $entity_id) {
 function feeds_item_info_insert($entity, $entity_id) {
   if (isset($entity->feeds_item)) {
     $entity->feeds_item->entity_id = $entity_id;
-    drupal_write_record('feeds_item', $entity->feeds_item);
+    backdrop_write_record('feeds_item', $entity->feeds_item);
   }
 }
 
@@ -1043,7 +1043,7 @@ function feeds_item_info_save($entity, $entity_id) {
   if (isset($entity->feeds_item)) {
     $entity->feeds_item->entity_id = $entity_id;
     if (feeds_item_info_load($entity->feeds_item->entity_type, $entity_id)) {
-      drupal_write_record('feeds_item', $entity->feeds_item, array('entity_type', 'entity_id'));
+      backdrop_write_record('feeds_item', $entity->feeds_item, array('entity_type', 'entity_id'));
     }
     else {
       feeds_item_info_insert($entity, $entity_id);
@@ -1067,7 +1067,7 @@ function feeds_item_info_save($entity, $entity_id) {
  *   The unique id of the importer object.
  *
  * @return
- *   A FeedsImporter object or an object of a class defined by the Drupal
+ *   A FeedsImporter object or an object of a class defined by the Backdrop
  *   variable 'feeds_importer_class'. There is only one importer object
  *   per $id system-wide.
  */
@@ -1084,7 +1084,7 @@ function feeds_importer($id) {
  *   The node id of a feed node if the source is attached to a feed node.
  *
  * @return
- *   A FeedsSource object or an object of a class defiend by the Drupal
+ *   A FeedsSource object or an object of a class defiend by the Backdrop
  *   variable 'source_class'.
  */
 function feeds_source($importer_id, $feed_nid = 0) {
@@ -1111,10 +1111,10 @@ function feeds_plugin($plugin, $id) {
   $args = array('%plugin' => $plugin, '@id' => $id);
   if (user_access('administer feeds')) {
     $args['@link'] = url('admin/structure/feeds/' . $id);
-    drupal_set_message(t('Missing Feeds plugin %plugin. See <a href="@link">@id</a>. Check whether all required libraries and modules are installed properly.', $args), 'warning', FALSE);
+    backdrop_set_message(t('Missing Feeds plugin %plugin. See <a href="@link">@id</a>. Check whether all required libraries and modules are installed properly.', $args), 'warning', FALSE);
   }
   else {
-    drupal_set_message(t('Missing Feeds plugin %plugin. Please contact your site administrator.', $args), 'warning', FALSE);
+    backdrop_set_message(t('Missing Feeds plugin %plugin. Please contact your site administrator.', $args), 'warning', FALSE);
   }
 
   return FeedsPlugin::instance('FeedsMissingPlugin', $id);
@@ -1148,7 +1148,7 @@ function feeds_include_library($file, $library) {
     $included[$key] = FALSE;
 
     $library_dir = config_get('feeds.settings', 'feeds_library_dir');
-    $feeds_library_path = DRUPAL_ROOT . '/' . drupal_get_path('module', 'feeds') . "/libraries/$file";
+    $feeds_library_path = BACKDROP_ROOT . '/' . backdrop_get_path('module', 'feeds') . "/libraries/$file";
     $libraries_path = module_exists('libraries') ? libraries_get_path($library) : FALSE;
 
     // Try first whether libraries module is present and load the file from
@@ -1157,8 +1157,8 @@ function feeds_include_library($file, $library) {
       require "$libraries_path/$file";
       $included[$key] = TRUE;
     }
-    elseif (is_file(DRUPAL_ROOT . '/sites/all/libraries/' . $key)) {
-      require DRUPAL_ROOT . '/sites/all/libraries/' . $key;
+    elseif (is_file(BACKDROP_ROOT . '/sites/all/libraries/' . $key)) {
+      require BACKDROP_ROOT . '/sites/all/libraries/' . $key;
       $included[$key] = TRUE;
     }
     elseif ($library_dir && is_file($library_dir . '/' . $key)) {
@@ -1191,10 +1191,10 @@ function feeds_library_exists($file, $library) {
   if ($path && is_file($path . '/' . $file)) {
     return TRUE;
   }
-  elseif (is_file(DRUPAL_ROOT . "/sites/all/libraries/$library/$file")) {
+  elseif (is_file(BACKDROP_ROOT . "/sites/all/libraries/$library/$file")) {
     return TRUE;
   }
-  elseif (is_file(DRUPAL_ROOT . '/' . drupal_get_path('module', 'feeds') . "/libraries/$file")) {
+  elseif (is_file(BACKDROP_ROOT . '/' . backdrop_get_path('module', 'feeds') . "/libraries/$file")) {
     return TRUE;
   }
   elseif ($library_dir = config_get('feeds.settings', 'feeds_library_dir')) {
@@ -1241,13 +1241,13 @@ function feeds_include_simplepie() {
 /**
  * @deprecated
  *
- * Simplified drupal_alter().
+ * Simplified backdrop_alter().
  *
  * - None of that 'multiple parameters by ref' crazyness.
  * - Don't use module_implements() to allow hot including on behalf
  *   implementations (see mappers/).
  *
- * @todo This needs to be removed and drupal_alter() used. This is crazy dumb.
+ * @todo This needs to be removed and backdrop_alter() used. This is crazy dumb.
  */
 function feeds_alter($type, &$data) {
   $args = array(&$data);
@@ -1313,7 +1313,7 @@ function feeds_valid_url($url, $absolute = FALSE) {
  * @see feeds_get_subscription_jobs()
  */
 function feeds_set_subscription_job(array $job = NULL) {
-  $jobs = &drupal_static(__FUNCTION__, array());
+  $jobs = &backdrop_static(__FUNCTION__, array());
   if (isset($job)) {
     $jobs[] = $job;
   }

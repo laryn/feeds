@@ -8,7 +8,7 @@
 /**
  * Test FeedsDateTime class.
  *
- * Using DrupalWebTestCase as DrupalUnitTestCase is broken in SimpleTest 2.8.
+ * Using BackdropWebTestCase as BackdropUnitTestCase is broken in SimpleTest 2.8.
  * Not inheriting from Feeds base class as ParserCSV should be moved out of
  * Feeds at some time.
  */

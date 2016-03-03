@@ -44,17 +44,17 @@ function feeds_tests_theme() {
   return array(
     'feeds_tests_flickr' => array(
       'variables' => array('image_urls' => array()),
-      'path' => drupal_get_path('module', 'feeds_tests') . '/feeds',
+      'path' => backdrop_get_path('module', 'feeds_tests') . '/feeds',
       'template' => 'feeds-tests-flickr',
     ),
     'feeds_tests_files' => array(
       'variables' => array('files' => array()),
-      'path' => drupal_get_path('module', 'feeds_tests') . '/feeds',
+      'path' => backdrop_get_path('module', 'feeds_tests') . '/feeds',
       'template' => 'feeds-tests-files',
     ),
     'feeds_tests_files_empty' => array(
       'variables' => array('files' => array()),
-      'path' => drupal_get_path('module', 'feeds_tests') . '/feeds',
+      'path' => backdrop_get_path('module', 'feeds_tests') . '/feeds',
       'template' => 'feeds-tests-files-empty',
     ),
   );
@@ -71,11 +71,11 @@ function feeds_tests_flickr() {
     3 => "hstreet.jpeg",
     4 => "la fayette.jpeg",
   );
-  $path = drupal_get_path('module', 'feeds_tests') . '/feeds/assets';
+  $path = backdrop_get_path('module', 'feeds_tests') . '/feeds/assets';
   foreach ($images as &$image) {
     $image = file_create_url("$path/$image");
   }
-  drupal_add_http_header('Content-Type', 'application/rss+xml; charset=utf-8');
+  backdrop_add_http_header('Content-Type', 'application/rss+xml; charset=utf-8');
   print theme('feeds_tests_flickr', array('image_urls' => $images));
 }
 
@@ -93,7 +93,7 @@ function feeds_tests_files() {
   foreach ($images as &$image) {
     $image = "public://images/$image";
   }
-  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+  backdrop_add_http_header('Content-Type', 'text/plain; charset=utf-8');
   print theme('feeds_tests_files', array('files' => $images));
 }
 
@@ -108,11 +108,11 @@ function feeds_tests_files_remote() {
     3 => 'hstreet.jpeg',
     4 => 'la fayette.jpeg',
   );
-  $path = drupal_get_path('module', 'feeds_tests') . '/feeds/assets';
+  $path = backdrop_get_path('module', 'feeds_tests') . '/feeds/assets';
   foreach ($images as &$image) {
     $image = file_create_url("$path/$image");
   }
-  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+  backdrop_add_http_header('Content-Type', 'text/plain; charset=utf-8');
   print theme('feeds_tests_files', array('files' => $images));
 }
 
@@ -129,11 +129,11 @@ function feeds_tests_files_empty_alt_title() {
     3 => 'hstreet.jpeg',
     4 => 'la fayette.jpeg',
   );
-  $path = drupal_get_path('module', 'feeds_tests') . '/feeds/assets';
+  $path = backdrop_get_path('module', 'feeds_tests') . '/feeds/assets';
   foreach ($images as &$image) {
     $image = file_create_url("$path/$image");
   }
-  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+  backdrop_add_http_header('Content-Type', 'text/plain; charset=utf-8');
   print theme('feeds_tests_files_empty', array('files' => $images));
 }
 
@@ -150,7 +150,7 @@ function feeds_tests_files_empty() {
     3 => '',
     4 => '',
   );
-  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+  backdrop_add_http_header('Content-Type', 'text/plain; charset=utf-8');
   print theme('feeds_tests_files_empty', array('files' => $images));
 }
 
@@ -263,7 +263,7 @@ function feeds_tests_mapper_summary(array $mapping, $target, array $form, array 
     '#theme' => 'item_list',
     '#items' => $items,
   );
-  return drupal_render($list);
+  return backdrop_render($list);
 }
 
 /**

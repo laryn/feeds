@@ -139,7 +139,7 @@ function http_request_get($url, $username = NULL, $password = NULL, $accept_inva
   $url = strtr($url, array('feed://' => 'http://', 'webcal://' => 'http://'));
 
   if ($curl) {
-    $headers[] = 'User-Agent: Drupal (+http://drupal.org/)';
+    $headers[] = 'User-Agent: Backdrop (+http://drupal.org/)';
     $result = new stdClass();
     $result->headers = array();
 
@@ -181,7 +181,7 @@ function http_request_get($url, $username = NULL, $password = NULL, $accept_inva
 
       $proxy_server = config_get('feeds.settings', 'proxy_server');
 
-      if ($proxy_server && _drupal_http_use_proxy($uri['host'])) {
+      if ($proxy_server && _backdrop_http_use_proxy($uri['host'])) {
         curl_setopt($download, CURLOPT_PROXY, $proxy_server);
         curl_setopt($download, CURLOPT_PROXYPORT, config_get('feeds.settings', 'proxy_port'));
 
@@ -219,7 +219,7 @@ function http_request_get($url, $username = NULL, $password = NULL, $accept_inva
       // an older version of libcurl.
       $curl_ver = curl_version();
 
-      if ($proxy_server && $curl_ver['version_number'] < 0x71e00 && _drupal_http_use_proxy($uri['host'])) {
+      if ($proxy_server && $curl_ver['version_number'] < 0x71e00 && _backdrop_http_use_proxy($uri['host'])) {
         $http_header_break = "\r\n\r\n";
         $response = explode($http_header_break, $data);
         if (count($response) > 2) {
@@ -255,7 +255,7 @@ function http_request_get($url, $username = NULL, $password = NULL, $accept_inva
     }
   }
   else {
-    $result = drupal_http_request($url, array('headers' => $headers, 'timeout' => $request_timeout));
+    $result = backdrop_http_request($url, array('headers' => $headers, 'timeout' => $request_timeout));
     $result->headers = isset($result->headers) ? $result->headers : array();
   }
 
@@ -401,7 +401,7 @@ function http_request_find_feeds($html) {
         $attribute[2] = $attribute[3];
       }
       if (!empty($attribute[1]) && !empty($attribute[2])) {
-        $candidate[drupal_strtolower($attribute[1])] = drupal_strtolower(decode_entities($attribute[2]));
+        $candidate[backdrop_strtolower($attribute[1])] = backdrop_strtolower(decode_entities($attribute[2]));
       }
     }
 
