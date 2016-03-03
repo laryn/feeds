@@ -312,7 +312,7 @@ function _feeds_form_helper($form, &$form_state, $action) {
   // This will re-initialize all of the plugins anyway, causing some tricky
   // saving issues in certain cases.
   // See http://drupal.org/node/1672880.
-  if ($class == variable_get('feeds_importer_class', 'FeedsImporter')) {
+  if ($class == config_get('feeds.settings', 'feeds_importer_class')) {
     $form['#configurable'] = feeds_importer($id);
   }
   else {

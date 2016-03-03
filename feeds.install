@@ -37,7 +37,7 @@ function feeds_requirements($phase) {
   if (!feeds_simplepie_exists()) {
     $requirements['simplepie']['value'] = $t('Not installed');
 
-    $folder = drupal_get_path('module', 'feeds') . '/libraries';
+    $folder = backdrop_get_path('module', 'feeds') . '/libraries';
     if (module_exists('libraries')) {
       $folder = 'sites/all/libraries/simplepie';
     }
@@ -52,15 +52,6 @@ function feeds_requirements($phase) {
   }
 
   return $requirements;
-}
-
-/**
-  * Implement hook_uninstall()
-  */
-function feeds_uninstall() {
-  variable_del('http_request_timeout');
-  variable_del('feeds_reschedule');
-  variable_del('feeds_use_mbstring');
 }
 
 /**
@@ -353,356 +344,66 @@ function feeds_schema() {
     ),
   );
 
-  $schema['cache_feeds_http'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_feeds_http'] = backdrop_get_schema_unprocessed('system', 'cache');
   $schema['cache_feeds_http']['description'] = 'Cache table for Feeds downloads.';
 
   return $schema;
 }
 
-/**
- * Rename feeds_source.batch to feeds_source.state, add slot for caching fetcher
- * result.
- */
-function feeds_update_7100() {
-  $spec = array(
-    'type' => 'text',
-    'size' => 'big',
-    'not null' => FALSE,
-    'description' => 'State of import or clearing batches.',
-    'serialize' => TRUE,
-  );
-  db_change_field('feeds_source', 'batch', 'state', $spec);
 
-  $spec = array(
-    'type' => 'text',
-    'size' => 'big',
-    'not null' => FALSE,
-    'description' => 'Cache for fetcher result.',
-    'serialize' => TRUE,
-  );
-  db_add_field('feeds_source', 'fetcher_result', $spec);
-}
 
-/**
- * Add imported timestamp to feeds_source table.
- */
-function feeds_update_7201() {
-  $spec = array(
-    'type' => 'int',
-    'not null' => TRUE,
-    'default' => 0,
-    'unsigned' => TRUE,
-    'description' => 'Timestamp when this source was imported last.',
-  );
-  db_add_field('feeds_source', 'imported', $spec);
-}
 
-/**
- * Create a single feeds_item table tracking all imports.
- */
-function feeds_update_7202() {
-  $spec = array(
-    'description' => 'Tracks items such as nodes, terms, users.',
-    'fields' => array(
-      'entity_type' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The entity type.',
-      ),
-      'entity_id' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'The imported entity\'s serial id.',
-      ),
-      'id' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The id of the importer that created this item.',
-      ),
-      'feed_nid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'Node id of the source, if available.',
-      ),
-      'imported' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Import date of the feed item, as a Unix timestamp.',
-      ),
-      'url' => array(
-        'type' => 'text',
-        'not null' => TRUE,
-        'description' => 'Link to the feed item.',
-      ),
-      'guid' => array(
-        'type' => 'text',
-        'not null' => TRUE,
-        'description' => 'Unique identifier for the feed item.'
-      ),
-      'hash' => array(
-        'type' => 'varchar',
-        'length' => 32, // The length of an MD5 hash.
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The hash of the source item.',
-      ),
-    ),
-    'primary key' => array('entity_type', 'entity_id'),
-    'indexes' => array(
-      'id' => array('id'),
-      'feed_nid' => array('feed_nid'),
-      'lookup_url' => array('entity_type', 'id', 'feed_nid', array('url', 128)),
-      'lookup_guid' => array('entity_type', 'id', 'feed_nid', array('guid', 128)),
-      'imported' => array('imported'),
-    ),
-  );
-  db_create_table('feeds_item', $spec);
-  // Copy all existing values from old tables and drop them.
-  $insert = "INSERT INTO {feeds_item} (entity_type, entity_id, id, feed_nid, imported, url, guid, hash)";
-  db_query($insert . " SELECT 'node', nid, id, feed_nid, imported, url, guid, hash FROM {feeds_node_item}");
-  db_query($insert . " SELECT 'taxonomy_term', tid, id, feed_nid, 0, '', '', '' FROM {feeds_term_item}");
-  db_drop_table('feeds_node_item');
-  db_drop_table('feeds_term_item');
-}
 
-/**
- * Add feeds_log table.
- */
-function feeds_update_7203() {
-  $schema = array(
-    'description' => 'Table that contains logs of feeds events.',
-    'fields' => array(
-      'flid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique feeds event ID.',
-      ),
-      'id' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The id of the importer that logged the event.',
-      ),
-      'feed_nid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'Node id of the source, if available.',
-      ),
-      'log_time' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Unix timestamp of when event occurred.',
-      ),
-      'request_time' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Unix timestamp of the request when the event occurred.',
-      ),
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Type of log message, for example "feeds_import"."',
-      ),
-      'message' => array(
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'big',
-        'description' => 'Text of log message to be passed into the t() function.',
-      ),
-      'variables' => array(
-        'type' => 'blob',
-        'not null' => TRUE,
-        'size' => 'big',
-        'description' => 'Serialized array of variables that match the message string and that is passed into the t() function.',
-      ),
-      'severity' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'The severity level of the event; ranges from 0 (Emergency) to 7 (Debug)',
-      ),
-    ),
-    'primary key' => array('flid'),
-    'indexes' => array(
-      'id' => array('id'),
-      'id_feed_nid' => array('id', 'feed_nid'),
-      'request_time' => array('request_time'),
-      'log_time' => array('log_time'),
-      'type' => array('type'),
-    ),
-  );
-  db_create_table('feeds_log', $schema);
-}
 
-/**
- * Add index for looking up by entity_type + url/ guid to feeds_item table.
- */
-function feeds_update_7204() {
-  db_add_index('feeds_item', 'global_lookup_url', array('entity_type', array('url', 128)));
-  db_add_index('feeds_item', 'global_lookup_guid', array('entity_type', array('guid', 128)));
-}
 
-/**
- * Shorten {feeds_item}.entity_type to 32 chars and shorten relevant indexes.
- */
-function feeds_update_7205() {
-  db_drop_primary_key('feeds_item');
-  db_drop_index('feeds_item', 'lookup_url');
-  db_drop_index('feeds_item', 'lookup_guid');
-  db_drop_index('feeds_item', 'global_lookup_url');
-  db_drop_index('feeds_item', 'global_lookup_guid');
 
-  db_change_field('feeds_item', 'entity_type', 'entity_type', array(
-    'type' => 'varchar',
-    'length' => 32,
-    'not null' => TRUE,
-    'default' => '',
-    'description' => 'The entity type.',
-  ));
 
-  db_add_primary_key('feeds_item', array('entity_type', 'entity_id'));
-  db_add_index('feeds_item', 'lookup_url', array('entity_type', 'id', 'feed_nid', array('url', 128)));
-  db_add_index('feeds_item', 'lookup_guid', array('entity_type', 'id', 'feed_nid', array('guid', 128)));
-  db_add_index('feeds_item', 'global_lookup_url', array('entity_type', array('url', 128)));
-  db_add_index('feeds_item', 'global_lookup_guid', array('entity_type', array('guid', 128)));
-}
 
-/**
- * Change state and fetcher_result fields from text to blob.
- */
-function feeds_update_7206() {
-  db_change_field('feeds_source', 'state', 'state', array(
-    'type' => 'blob',
-    'size' => 'big',
-    'not null' => FALSE,
-    'description' => 'State of import or clearing batches.',
-    'serialize' => TRUE,
-  ));
+function feeds_update_1000() {
+  $config = config('feeds.settings');
 
-  db_change_field('feeds_source', 'fetcher_result', 'fetcher_result', array(
-    'type' => 'blob',
-    'size' => 'big',
-    'not null' => FALSE,
-    'description' => 'Cache for fetcher result.',
-    'serialize' => TRUE,
-  ));
-}
+  $config->set('feeds_reschedule', update_variable_get('feeds_reschedule'));
+  $config->set('feeds_debug', update_variable_get('feeds_debug'));
+  $config->set('feeds_importer_class', update_variable_get('feeds_importer_class'));
+  $config->set('feeds_library_dir', update_variable_get('feeds_library_dir'));
 
-/**
- * Change config fields from text to big blobs.
- */
-function feeds_update_7207() {
-  db_change_field('feeds_importer', 'config', 'config', array(
-    'type' => 'blob',
-    'size' => 'big',
-    'not null' => FALSE,
-    'description' => 'Configuration of the feeds object.',
-    'serialize' => TRUE,
-  ));
+  $config->set('default_feeds_importer', update_variable_get('default_feeds_importer'));
+  $config->set('menu_rebuild_needed', update_variable_get('menu_rebuild_needed'));
+  $config->set('feeds_source_class', update_variable_get('feeds_source_class'));
+  $config->set('http_request_timeout', update_variable_get('http_request_timeout'));
 
-  db_change_field('feeds_source', 'config', 'config', array(
-    'type' => 'blob',
-    'size' => 'big',
-    'not null' => FALSE,
-    'description' => 'Configuration of the feeds object.',
-    'serialize' => TRUE,
-  ));
-}
+  $config->set('proxy_server', update_variable_get('proxy_server'));
+  $config->set('proxy_port', update_variable_get('proxy_port'));
+  $config->set('proxy_username', update_variable_get('proxy_username'));
+  $config->set('proxy_password', update_variable_get('proxy_password'));
 
-/**
- * Update to use generic bundle handling.
- */
-function feeds_update_7208(&$sandbox) {
+  $config->set('proxy_auth_method', update_variable_get('proxy_auth_method'));
+  $config->set('feeds_never_use_curl', update_variable_get('feeds_never_use_curl'));
+  $config->set('feeds_library_dir', update_variable_get('feeds_library_dir'));
+  $config->set('feeds_process_limit', update_variable_get('feeds_process_limit'));
+  $config->set('default_nodes_main', update_variable_get('default_nodes_main'));
 
-  if (!isset($sandbox['importers'])) {
-    // Get all importers.
-    $sandbox['importers'] = db_query("SELECT id FROM {feeds_importer}")->fetchCol();
-    $sandbox['total'] = count($sandbox['importers']);
-  }
+  $config->save();
 
-  $importer = array_pop($sandbox['importers']);
-  $config = db_query("SELECT config FROM {feeds_importer} WHERE id = :id", array(':id' => $importer))->fetchField();
+  // Delete variables.
+  update_variable_del('feeds_reschedule');
+  update_variable_del('feeds_debug');
+  update_variable_del('feeds_importer_class');
+  update_variable_del('feeds_library_dir');
 
-  if ($config) {
-    $config = unserialize($config);
+  update_variable_del('default_feeds_importer');
+  update_variable_del('menu_rebuild_needed');
+  update_variable_del('feeds_source_class');
+  update_variable_del('http_request_timeout');
 
-    switch ($config['processor']['plugin_key']) {
-      case 'FeedsNodeProcessor':
-        $config_key = 'content_type';
-        break;
+  update_variable_del('proxy_server');
+  update_variable_del('proxy_port');
+  update_variable_del('proxy_username');
+  update_variable_del('proxy_password');
 
-      case 'FeedsTermProcessor':
-        $config_key = 'vocabulary';
-        break;
-
-      default:
-        $config_key = FALSE;
-        break;
-    }
-
-    if ($config_key && isset($config['processor']['config'][$config_key])) {
-      $config['processor']['config']['bundle'] = $config['processor']['config'][$config_key];
-      unset($config['processor']['config'][$config_key]);
-
-      // Update databse.
-      db_update('feeds_importer')
-        ->fields(array(
-          'config' => serialize($config),
-        ))
-        ->condition('id', $importer)
-        ->execute();
-    }
-
-    $sandbox['#finished'] = 1 - count($sandbox['importers']) / $sandbox['total'];
-  }
-  else {
-    $sandbox['#finished'] = 1;
-  }
-}
-
-/**
- * Reschedules feeds jobs.
- */
-function feeds_update_7209() {
-  // Reschedule all importers.
-  variable_set('feeds_reschedule', TRUE);
-
-  // Our expire callback has changed names, remove all existing callbacks.
-  db_delete('job_schedule')
-    ->condition('name', 'feeds_importer_expire')
-    ->execute();
-
-  DrupalQueue::get('feeds_importer_expire')->deleteQueue();
-}
-
- /**
-  * Does nothing. Update removed.
-  */
-function feeds_update_7211(&$sandbox) {
-}
-
-/**
- * Create {cache_feeds_http} table.
- */
-function feeds_update_7212() {
-  if (!db_table_exists('cache_feeds_http')) {
-    $schema = drupal_get_schema_unprocessed('system', 'cache');
-    $schema['description'] = 'Cache table for Feeds downloads.';
-    db_create_table('cache_feeds_http', $schema);
-  }
+  update_variable_del('proxy_auth_method');
+  update_variable_del('feeds_never_use_curl');
+  update_variable_del('feeds_library_dir');
+  update_variable_del('feeds_process_limit');
+  update_variable_del('default_nodes_main');
 }

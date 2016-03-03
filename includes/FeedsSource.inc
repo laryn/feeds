@@ -196,7 +196,7 @@ class FeedsSource extends FeedsConfigurable {
    * directly, use feeds_source() instead.
    */
   public static function instance($importer_id, $feed_nid) {
-    $class = variable_get('feeds_source_class', 'FeedsSource');
+    $class = config_get('feeds.settings', 'feeds_source_class');
 
     $instances = &drupal_static(__METHOD__, array());
 

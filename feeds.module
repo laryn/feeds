@@ -207,7 +207,7 @@ function feeds_batch($method, $importer_id, $feed_nid = 0, &$context) {
  *   An list of importers that need rescheduling.
  */
 function feeds_reschedule($importer_id = NULL) {
-  $reschedule = variable_get('feeds_reschedule', FALSE);
+  $reschedule = config_get('feeds.settings', 'feeds_reschedule')
 
   if ($importer_id === TRUE || $importer_id === FALSE) {
     $reschedule = $importer_id;
@@ -218,7 +218,7 @@ function feeds_reschedule($importer_id = NULL) {
   }
 
   if (isset($importer_id)) {
-    variable_set('feeds_reschedule', $reschedule);
+    config_set('feeds.settings', 'feeds_reschedule', $reschedule);
   }
 
   if ($reschedule === TRUE) {
@@ -973,7 +973,7 @@ function feeds_export($importer_id, $indent = '') {
  * Logs to a file like /tmp/feeds_my_domain_org.log in temporary directory.
  */
 function feeds_dbg($msg) {
-  if (variable_get('feeds_debug', FALSE)) {
+  if (config_get('feeds.settings', 'feeds_debug')) {
     if (!is_string($msg)) {
       $msg = var_export($msg, TRUE);
     }
@@ -1068,7 +1068,7 @@ function feeds_item_info_save($entity, $entity_id) {
  *   per $id system-wide.
  */
 function feeds_importer($id) {
-  return FeedsConfigurable::instance(variable_get('feeds_importer_class', 'FeedsImporter'), $id);
+  return FeedsConfigurable::instance(config_get('feeds.settings', 'feeds_importer_class'), $id);
 }
 
 /**
@@ -1146,7 +1146,7 @@ function feeds_include_library($file, $library) {
   if (!isset($included[$key])) {
     $included[$key] = FALSE;
 
-    $library_dir = variable_get('feeds_library_dir', FALSE);
+    $library_dir = config_get('feeds.settings', 'feeds_library_dir');
     $feeds_library_path = DRUPAL_ROOT . '/' . drupal_get_path('module', 'feeds') . "/libraries/$file";
     $libraries_path = module_exists('libraries') ? libraries_get_path($library) : FALSE;
 
@@ -1196,7 +1196,7 @@ function feeds_library_exists($file, $library) {
   elseif (is_file(DRUPAL_ROOT . '/' . drupal_get_path('module', 'feeds') . "/libraries/$file")) {
     return TRUE;
   }
-  elseif ($library_dir = variable_get('feeds_library_dir', FALSE)) {
+  elseif ($library_dir = config_get('feeds.settings', 'feeds_library_dir')) {
     if (is_file("$library_dir/$library/$file")) {
       return TRUE;
     }

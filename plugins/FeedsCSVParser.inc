@@ -227,7 +227,7 @@ class FeedsCSVParser extends FeedsParser {
    *   A renderable array.
    */
   public function configEncodingForm() {
-    if (extension_loaded('mbstring') && variable_get('feeds_use_mbstring', TRUE)) {
+    if (extension_loaded('mbstring') && config_get('feeds.settings', 'feeds_use_mbstring')) {
       // Get the system's list of available encodings.
       $options = mb_list_encodings();
       // Make the key/values the same in the array.

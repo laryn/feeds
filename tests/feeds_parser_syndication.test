@@ -42,7 +42,7 @@ class FeedsSyndicationParserTestCase extends FeedsWebTestCase {
     }
 
     feeds_include_simplepie();
-    variable_set('feeds_never_use_curl', TRUE);
+    config_set('feeds.settings', 'feeds_never_use_curl', TRUE);
 
     $link = $GLOBALS['base_url'] . '/testing/feeds/flickr.xml';
     $enclosure = new FeedsSimplePieEnclosure(new SimplePie_Enclosure($link));

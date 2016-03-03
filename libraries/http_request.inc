@@ -94,7 +94,7 @@ function http_request_get($url, $username = NULL, $password = NULL, $accept_inva
   }
 
   // Determine request timeout.
-  $request_timeout = !empty($timeout) ? $timeout : variable_get('http_request_timeout', 30);
+  $request_timeout = !empty($timeout) ? $timeout : config_get('feeds.settings', 'http_request_timeout');
 
   if (!$username && valid_url($url, TRUE)) {
     // Handle password protected feeds.
@@ -179,18 +179,18 @@ function http_request_get($url, $username = NULL, $password = NULL, $accept_inva
       curl_setopt($download, CURLOPT_ENCODING, '');
       curl_setopt($download, CURLOPT_TIMEOUT, $request_timeout);
 
-      $proxy_server = variable_get('proxy_server');
+      $proxy_server = config_get('feeds.settings', 'proxy_server');
 
       if ($proxy_server && _drupal_http_use_proxy($uri['host'])) {
         curl_setopt($download, CURLOPT_PROXY, $proxy_server);
-        curl_setopt($download, CURLOPT_PROXYPORT, variable_get('proxy_port', 8080));
+        curl_setopt($download, CURLOPT_PROXYPORT, config_get('feeds.settings', 'proxy_port'));
 
         // Proxy user/password.
-        if ($proxy_username = variable_get('proxy_username')) {
-          $username_password = $proxy_username . ':' . variable_get('proxy_password', '');
+        if ($proxy_username = config_get('feeds.settings', 'proxy_username')) {
+          $username_password = $proxy_username . ':' . config_get('feeds.settings', 'proxy_password');
 
           curl_setopt($download, CURLOPT_PROXYUSERPWD, $username_password);
-          curl_setopt($download, CURLOPT_PROXYAUTH, variable_get('proxy_auth_method', CURLAUTH_BASIC));
+          curl_setopt($download, CURLOPT_PROXYAUTH, config_get('feeds.settings', 'proxy_auth_method'));
         }
       }
 
@@ -291,7 +291,7 @@ function http_request_get($url, $username = NULL, $password = NULL, $accept_inva
  */
 function http_request_use_curl() {
   // Allow site administrators to choose to not use cURL.
-  if (variable_get('feeds_never_use_curl', FALSE)) {
+  if (config_get('feeds.settings', 'feeds_never_use_curl')) {
     return FALSE;
   }
 

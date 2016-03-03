@@ -24,7 +24,7 @@ class FeedsMapperDateMultipleTestCase extends FeedsMapperTestCase {
 
   public function setUp() {
     parent::setUp(array('date_api', 'date', 'feeds_xpathparser'));
-    variable_set('date_default_timezone', 'UTC');
+    config_set('feeds.settings', 'date_default_timezone', 'UTC');
   }
 
   /**

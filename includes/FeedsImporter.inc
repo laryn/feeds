@@ -88,7 +88,7 @@ class FeedsImporter extends FeedsConfigurable {
       // to the standalone page.
       $config = unserialize($config);
       if ($config['content_type'] != $save->config['content_type']) {
-        variable_set('menu_rebuild_needed', TRUE);
+        config_set('feeds.settings', 'menu_rebuild_needed', TRUE);
       }
     }
     else {

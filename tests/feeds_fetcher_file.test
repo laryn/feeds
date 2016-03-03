@@ -60,7 +60,7 @@ class FeedsFileFetcherTestCase extends FeedsWebTestCase {
 
     // Ingest directory of files. Set limit to 5 to force processor to batch,
     // too.
-    variable_set('feeds_process_limit', 5);
+    config_set('feeds.settings', 'feeds_process_limit', 5);
     $edit = array(
       'feeds[FeedsFileFetcher][source]' => $dir,
     );
@@ -103,7 +103,7 @@ class FeedsFileFetcherTestCase extends FeedsWebTestCase {
 
     // Ingest directory of files. Set limit to 5 to force processor to batch,
     // too.
-    variable_set('feeds_process_limit', 5);
+    config_set('feeds.settings', 'feeds_process_limit', 5);
     $edit = array(
       'feeds[FeedsFileFetcher][source]' => $dir,
     );

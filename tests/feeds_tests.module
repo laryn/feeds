@@ -362,7 +362,7 @@ function feeds_tests_mapper_unique(FeedsSource $source, $entity_type, $bundle, $
  * @see FeedsCSVParserTestCase::testMbstringExtensionDisabled()
  */
 function feeds_tests_feeds_after_parse(FeedsSource $source, FeedsParserResult $result) {
-  if (variable_get('feeds_tests_feeds_after_parse_empty_items', FALSE)) {
+  if (config_get('feeds.settings', 'feeds_tests_feeds_after_parse_empty_items')) {
     // Remove all items. No items will be processed.
     $result->items = array();
   }

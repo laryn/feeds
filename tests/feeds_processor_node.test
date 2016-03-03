@@ -25,7 +25,7 @@ class FeedsRSStoNodesTest extends FeedsWebTestCase {
     parent::setUp();
 
     // Set the front page to show 20 nodes so we can easily see what is aggregated.
-    variable_set('default_nodes_main', 20);
+    config_set('feeds.settings', 'default_nodes_main', 20);
 
     // Set the teaser length display to unlimited otherwise tests looking for
     // text on nodes will fail.
@@ -549,7 +549,7 @@ class FeedsRSStoNodesTest extends FeedsWebTestCase {
     $this->removeMappings('syndication', $this->getCurrentMappings('syndication'));
 
     // Set our process limit to something simple.
-    variable_set('feeds_process_limit', 5);
+    config_set('feeds.settings', 'feeds_process_limit', 5);
 
     $this->setPlugin('syndication', 'FeedsFileFetcher');
     $this->setPlugin('syndication', 'FeedsCSVParser');

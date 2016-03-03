@@ -89,7 +89,7 @@ class ParserCSV {
     $this->lineLimit = 0;
     $this->lastLinePos = 0;
     ini_set('auto_detect_line_endings', TRUE);
-    if (extension_loaded('mbstring') && variable_get('feeds_use_mbstring', TRUE)) {
+    if (extension_loaded('mbstring') && config_get('feeds.settings', 'feeds_use_mbstring')) {
       $this->useMbString = TRUE;
     }
   }

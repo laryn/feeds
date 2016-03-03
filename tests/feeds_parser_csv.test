@@ -23,13 +23,13 @@ class FeedsCSVParserTestCase extends FeedsWebTestCase {
   public function testMbstringExtensionDisabled() {
     // Set "feeds_use_mbstring" to FALSE to emulate that the mbstring extension
     // is not loaded.
-    variable_set('feeds_use_mbstring', FALSE);
+    config_set('feeds.settings', 'feeds_use_mbstring', FALSE);
 
     // Remove items after parsing because in < PHP 5.4 processing items with
     // encoding issues leads to test failures because check_plain() can only
     // handle UTF-8 encoded strings.
     // @see feeds_tests_feeds_after_parse()
-    variable_set('feeds_tests_feeds_after_parse_empty_items', TRUE);
+    config_set('feeds.settings', 'feeds_tests_feeds_after_parse_empty_items', TRUE);
 
     // Create node type.
     $node_type = $this->drupalCreateContentType();

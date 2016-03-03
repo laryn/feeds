@@ -551,7 +551,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
    * @see FeedsCSVParser::parse()
    */
   public function getLimit() {
-    return variable_get('feeds_process_limit', FEEDS_PROCESS_LIMIT);
+    return config_get('feeds.settings', 'feeds_process_limit');
   }
 
   /**

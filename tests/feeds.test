@@ -638,7 +638,7 @@ class FeedsWebTestCase extends DrupalWebTestCase {
     $this->assertTrue(file_exists($local_file), t('@file found.', array('@file' => $local_file)));
 
     // Set the simpletest library directory.
-    variable_set('feeds_library_dir', $library_dir);
+    config_set('feeds.settings', 'feeds_library_dir', $library_dir);
   }
 }
 

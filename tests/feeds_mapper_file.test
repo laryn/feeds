@@ -31,7 +31,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
     // feeds_tests was enabled in your site before running the test, it will
     // work fine. Since it is truly screwy, lets just force it to use
     // drupal_http_request for this test case.
-    variable_set('feeds_never_use_curl', TRUE);
+    config_set('feeds.settings', 'feeds_never_use_curl', TRUE);
 
     // Only download simplepie if the plugin doesn't already exist somewhere.
     // People running tests locally might have it.
@@ -166,7 +166,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
    * Tests mapping to an image field.
    */
   public function testImages() {
-    variable_set('feeds_never_use_curl', TRUE);
+    config_set('feeds.settings', 'feeds_never_use_curl', TRUE);
 
     $typename = $this->createContentType(array(), array('images' => 'image'));
 
@@ -224,7 +224,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
   }
 
   public function testInvalidFileExtension() {
-    variable_set('feeds_never_use_curl', TRUE);
+    config_set('feeds.settings', 'feeds_never_use_curl', TRUE);
 
     $typename = $this->createContentType(array(), array(
       'files' => array(
@@ -282,7 +282,7 @@ class FeedsMapperFileTestCase extends FeedsMapperTestCase {
    * is provided.
    */
   public function testClearOutValues() {
-    variable_set('feeds_never_use_curl', TRUE);
+    config_set('feeds.settings', 'feeds_never_use_curl', TRUE);
 
     $this->createContentType(array(), array('files' => 'file'));
     $typename = $this->createContentType(array(), array(
