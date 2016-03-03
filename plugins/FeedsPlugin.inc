@@ -179,8 +179,7 @@ abstract class FeedsPlugin extends FeedsConfigurable implements FeedsSourceInter
    * Get all available plugins.
    */
   public static function all() {
-    ctools_include('plugins');
-    $plugins = ctools_get_plugins('feeds', 'plugins');
+      $plugins = ctools_get_plugins('feeds', 'plugins');
 
     $result = array();
     foreach ($plugins as $key => $info) {
@@ -208,8 +207,7 @@ abstract class FeedsPlugin extends FeedsConfigurable implements FeedsSourceInter
    *   FALSE otherwise.
    */
   public static function child($plugin_key, $parent_plugin) {
-    ctools_include('plugins');
-    $plugins = ctools_get_plugins('feeds', 'plugins');
+      $plugins = ctools_get_plugins('feeds', 'plugins');
     $info = $plugins[$plugin_key];
 
     if (empty($info['handler']['parent'])) {

@@ -16,6 +16,8 @@ define('FEEDS_EXPORT_NONE', 0x0);
 // Status of batched operations.
 define('FEEDS_BATCH_COMPLETE', 1.0);
 define('FEEDS_BATCH_ACTIVE', 0.0);
+define('EXPORT_IN_DATABASE', 0x01);
+define('EXPORT_IN_CODE', 0x02);
 
 /**
  * @defgroup hooks Hook and callback implementations
@@ -757,7 +759,6 @@ function feeds_system_info_alter(array &$info, $file, $type) {
   }
 
   // Get the plugins that belong to the current module.
-  ctools_include('plugins');
   $module_plugins = array();
   foreach (ctools_get_plugins('feeds', 'plugins') as $plugin_id => $plugin) {
     if ($file->name === $plugin['module']) {
@@ -772,7 +773,7 @@ function feeds_system_info_alter(array &$info, $file, $type) {
     // module. This ensures that modules that define both an importer and a
     // plugin can still be disabled.
     if ($importer->export_type == EXPORT_IN_CODE) {
-      $configs = ctools_export_load_object('feeds_importer', 'names', array($importer->id));
+      $configs = feeds_load_importer_object($importer->id);
       if (isset($configs[$importer->id]) && $configs[$importer->id]->export_module === $file->name) {
         continue;
       }
@@ -869,8 +870,7 @@ function feeds_importer_load_all($load_disabled = FALSE) {
   // This function can get called very early in install process through
   // menu_router_rebuild(). Do not try to include CTools if not available.
   if (function_exists('ctools_include')) {
-    ctools_include('export');
-    $configs = ctools_export_load_object('feeds_importer', 'all');
+      $configs = feeds_load_importer_object();
     foreach ($configs as $config) {
       if (!empty($config->id) && ($load_disabled || empty($config->disabled))) {
         $feeds[$config->id] = feeds_importer($config->id);
@@ -950,10 +950,15 @@ function feeds_cache_clear($rebuild_menu = TRUE) {
   cache_clear_all('_feeds_importer_digest', 'cache');
   drupal_static_reset('_feeds_importer_digest');
   cache_clear_all('plugins:feeds:plugins', 'cache');
-  ctools_include('export');
-  ctools_export_load_object_reset('feeds_importer');
+  feeds_load_importer_object_reset('feeds_importer');
   drupal_static_reset('_node_types_build');
-  if ($rebuild_menu) {
+  $cache = &backdrop_static('backdrop_tools_export_load_object');
+  $cached_database = &backdrop_static('backdrop_tools_export_load_object_all');
+  $cached_defaults = &backdrop_static('_ctools_export_get_defaults');
+  unset($cache[$table]);
+  unset($cached_database[$table]);
+  unset($cached_defaults[$table]);
+ if ($rebuild_menu) {
     menu_rebuild();
   }
 }
@@ -962,8 +967,7 @@ function feeds_cache_clear($rebuild_menu = TRUE) {
  * Exports a FeedsImporter configuration to code.
  */
 function feeds_export($importer_id, $indent = '') {
-  ctools_include('export');
-  $result = ctools_export_load_object('feeds_importer', 'names', array('id' => $importer_id));
+  $result = feeds_load_importer_object($importer_id);
   if (isset($result[$importer_id])) {
     return ctools_export_object('feeds_importer', $result[$importer_id], $indent);
   }
@@ -1099,10 +1103,9 @@ function feeds_source($importer_id, $feed_nid = 0) {
  *   A FeedsPlugin object.
  */
 function feeds_plugin($plugin, $id) {
-  ctools_include('plugins');
 
-  if ($class = ctools_plugin_load_class('feeds', 'plugins', $plugin, 'handler')) {
-    return FeedsPlugin::instance($class, $id, ctools_get_plugins('feeds', 'plugins', $plugin));
+  if (class_exists($plugin)) {
+    return FeedsPlugin::instance($plugin, $id, backdrop_tools_get_plugins('feeds', 'plugins', $plugin));
   }
 
   $args = array('%plugin' => $plugin, '@id' => $id);
@@ -1114,9 +1117,7 @@ function feeds_plugin($plugin, $id) {
     drupal_set_message(t('Missing Feeds plugin %plugin. Please contact your site administrator.', $args), 'warning', FALSE);
   }
 
-  $class = ctools_plugin_load_class('feeds', 'plugins', 'FeedsMissingPlugin', 'handler');
-
-  return FeedsPlugin::instance($class, $id);
+  return FeedsPlugin::instance('FeedsMissingPlugin', $id);
 }
 
 /**
@@ -1419,4 +1420,208 @@ function feeds_file_download($uri) {
 function feeds_api_version() {
   $version = feeds_ctools_plugin_api('feeds', 'plugins');
   return $version['version'];
+}
+
+function feeds_load_importer_object($importer_id = NULL) {
+  $cache = &backdrop_static(__FUNCTION__);
+
+  $table = 'feeds_importer';
+
+  $schema = backdrop_get_schema();
+  // Todo get rid of all this CTools cruft
+  $schema['export'] += array(
+  'key' => 'name', 
+  'key name' => 'Name', 
+  'object' => 'stdClass', 
+  'status' => 'default_' . $table, 
+  'default hook' => 'default_' . $table, 
+  'can disable' => TRUE, 
+  'identifier' => $table, 
+  'primary key' => !empty($schema['primary key']) ? $schema['primary key'][0] : '', 
+  'bulk export' => TRUE, 
+  'list callback' => "$schema[module]_{$table}_list", 
+  'to hook code callback' => "$schema[module]_{$table}_to_hook_code", 
+  'cache defaults' => FALSE, 
+  'default cache bin' => 'cache', 
+  'export type string' => 'type',
+  );
+  
+
+  $export = $schema['export'];
+
+  // If fetching all we are finished.
+  if (!$importer_id && $cache) {
+    return $cache;
+  }
+
+
+  // Don't load anything we've already cached.
+  if (!empty($importer_id) && isset($cache[$importer_id])) {
+    return $cache[$importer_id];
+  }
+
+
+  // Build the query
+  $query = db_select($table, 't__0')->fields('t__0');
+  $alias_count = 1;
+
+
+  // If they passed in names, add them to the query.
+  // todo, figure this out. Dont need this if we're just fetching all everytime
+  if ($type == 'names') {
+    $query->condition('id', $args, 'IN');
+  }
+
+  $result = $query->execute();
+
+  $return = array();
+  $conditions = array();
+  $query_args = array();
+  $status = array();
+
+  // Unpack the results of the query onto objects and cache them.
+  foreach ($result as $data) {
+    $object = new stdClass;
+    $object->config = unserialize($data->config);
+    $object->table = $table;
+    $object->type = t('Normal');
+    $object->export_type = EXPORT_IN_DATABASE;
+
+    $cache[$object->id] = $object;
+  }
+
+  // Todo get rid of the DB table and do all this in config
+  $defaults = _feeds_importer_get_defaults($table, $export);
+
+  if ($defaults) {
+    foreach ($defaults as $object) {
+      if ($object->id != $importer_id)) {
+        continue;
+      }
+
+      // Determine if default object is enabled or disabled.
+      // Todo figure this status business
+      if (isset($status[$object->id])) {
+        $object->disabled = $status[$object->id];
+      }
+
+      if (!empty($cache[$object->id])) {
+        $cache[$object->id]->type = t('Overridden');
+        $cache[$object->id]->export_type |= EXPORT_IN_CODE;
+        $cache[$object->id]->export_module = isset($object->export_module) ? $object->export_module : NULL;
+      }
+      else {
+        $object->type = t('Default');
+        $object->export_type = EXPORT_IN_CODE;
+        $object->in_code_only = TRUE;
+        $object->table = $table;
+
+        $cache[$object->id] = $object;
+      }
+    }
+  }
+
+  // If fetching all, we've done so and we are finished.
+  if ($type == 'all') {
+    $cached_database = TRUE;
+    return $cache;
+  }
+
+  if ($type == 'names') {
+    foreach ($args as $name) {
+      if (isset($cache[$name])) {
+        $return[$name] = $cache[$name];
+      }
+    }
+  }
+
+  // For conditions,
+  return $return;
+}
+
+function _feeds_importer_get_defaults($table, $export) {
+  $cache = &backdrop_static(__FUNCTION__, array());
+
+  if (!isset($cache)) {
+    $cache = array();
+
+    $modules = module_implements('feeds_importer_default');
+
+    foreach ($modules as $module) {
+      $function = $module . '_feeds_importer_default';
+      if (function_exists($function)) {
+        foreach ((array) $function($export) as $name => $object) {
+          // Record the module that provides this exportable.
+          $object->export_module = $module;
+
+          // If version checking is enabled, ensure that the object can be used.
+          if (isset($object->api_version) && 
+              version_compare($object->api_version, $export['api']['minimum_version']) >= 0 && 
+              version_compare($object->api_version, $export['api']['current_version']) <= 0) {
+            $cache[$name] = $object;
+          }
+        }
+      }
+    }
+
+    backdrop_alter('feeds_importer_default', $cache);
+  }
+
+  return $cache;
+}
+
+function feeds_get_plugins($plugin = NULL) {
+  $plugins = module_invoke_all('feeds_plugins');
+  if ($plugin) {
+    return $plugins[$plugin];
+  }
+  return $plugins;
+}
+
+function feeds_autoload_info() {
+  return array(
+  'FeedsConfigurable' => 'includes/FeedsConfigurable.inc',
+  'FeedsNotExistingException' => 'includes/FeedsConfigurable.inc',
+  'FeedsImporter' => 'includes/FeedsImporter.inc',
+  'FeedsLockException' => 'includes/FeedsSource.inc',
+  'FeedsSource' => 'includes/FeedsSource.inc',
+  'FeedsSourceInterface' => 'includes/FeedsSource.inc',
+  'HRCurlException' => 'libraries/http_request.inc',
+  'FeedsCSVParser' => 'includes/FeedsCSVParser.inc',
+  'FeedsResult' => 'plugins/FeedsPlugin.inc',
+  'FeedsFetcherResult' => 'plugins/FeedsFetcher.inc',
+  'FeedsFetcher' => 'plugins/FeedsFetcher.inc',
+  'FeedsFileFetcher' => 'plugins/FeedsFileFetcher.inc',
+  'FeedsFileFetcherResult' => 'plugins/FeedsFileFetcher.inc',
+  'FeedsHTTPFetcher' => 'plugins/FeedsHTTPFetcher.inc',
+  'FeedsHTTPFetcherResult' => 'plugins/FeedsHTTPFetcher.inc',
+  'FeedsNodeProcessor' => 'plugins/FeedsNodeProcessor.inc',
+  'FeedsOPMLParser' => 'plugins/FeedsOPMLParser.inc',
+  'FeedsParser' => 'plugins/FeedsParser.inc',
+  'FeedsParserResult' => 'plugins/FeedsParser.inc',
+  'FeedsTermElement' => 'plugins/FeedsParser.inc',
+  'FeedsGeoTermElement' => 'plugins/FeedsParser.inc',
+  'FeedsEnclosure' => 'plugins/FeedsParser.inc',
+  'FeedsDateTimeElement' => 'plugins/FeedsParser.inc',
+  'FeedsDateTime' => 'plugins/FeedsParser.inc',
+  'FeedsPlugin' => 'plugins/FeedsPlugin.inc',
+  'FeedsMissingPlugin' => 'plugins/FeedsPlugin.inc',
+  'FeedsProcessor' => 'plugins/FeedsProcessor.inc',
+  'FeedsValidationException' => 'plugins/FeedsProcessor.inc',
+  'FeedsAccessException' => 'plugins/FeedsProcessor.inc',
+  'FeedsProcessorBundleNotDefined' => 'plugins/FeedsProcessor.inc',
+  'FeedsSimplePieParser' => 'plugins/FeedsSimplePieParser.inc',
+  'FeedsSimplePieEnclosure' => 'plugins/FeedsSimplePieParser.inc',
+  'FeedsSitemapParser' => 'plugins/FeedsSitemapParser.inc',
+  'FeedsSyndicationParser' => 'plugins/FeedsSyndicationParser.inc',
+  'FeedsTermProcessor' => 'plugins/FeedsTermProcessor.inc',
+  'FeedsUserProcessor' => 'plugins/FeedsUserProcessor.inc',
+  'feeds_views_handler_argument_importer_id' => 'views/feeds_views_handler_argument_importer_id.inc',
+  'feeds_views_handler_field_importer_name' => 'views/feeds_views_handler_field_importer_name.inc',
+  'feeds_views_handler_field_log_message' => 'views/feeds_views_handler_field_log_message.inc',
+  'feeds_views_handler_field_severity' => 'views/feeds_views_handler_field_severity.inc',
+  'feeds_views_handler_field_source' => 'views/feeds_views_handler_field_source.inc',
+  'feeds_views_handler_filter_severity' => 'views/feeds_views_handler_filter_severity.inc',
+  'feeds_views_plugin_argument_validate_feed_nid' => 'views/feeds_views_plugin_argument_validate_feed_nid.inc',
+  );
 }

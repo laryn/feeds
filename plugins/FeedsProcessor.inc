@@ -93,7 +93,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
    *   A new entity object.
    */
   protected function newEntity(FeedsSource $source) {
-    $entity = new stdClass();
+    $entity = entity_create('node', array());
 
     $info = $this->entityInfo();
     if (!empty($info['entity keys']['language'])) {
@@ -1256,7 +1256,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
    *   The sanitized string representation of the object.
    */
   protected function exportObjectVars($object) {
-    include_once DRUPAL_ROOT . '/includes/utility.inc';
+    include_once DRUPAL_ROOT . '/core/includes/utility.inc';
 
     $out = is_array($object) ? $object : get_object_vars($object);
     $out = array_filter($out, 'is_scalar');

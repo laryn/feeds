@@ -119,9 +119,9 @@ function feeds_ui_theme() {
 }
 
 /**
- * Implements hook_admin_menu_map().
+ * Implements hook_admin_bar_map().
  */
-function feeds_ui_admin_menu_map() {
+function feeds_ui_admin_bar_map() {
   // Add awareness to the administration menu of the various importers so they
   // are included in the dropdown menu.
   if (!user_access('administer feeds')) {

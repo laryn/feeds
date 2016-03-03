@@ -652,8 +652,7 @@ class FeedsSource extends FeedsConfigurable {
     if ($record = db_query("SELECT imported, config, state, fetcher_result FROM {feeds_source} WHERE id = :id AND feed_nid = :nid", array(':id' => $this->id, ':nid' => $this->feed_nid))->fetchObject()) {
       // While FeedsSource cannot be exported, we still use CTool's export.inc
       // export definitions.
-      ctools_include('export');
-      $this->export_type = EXPORT_IN_DATABASE;
+          $this->export_type = EXPORT_IN_DATABASE;
       $this->imported = $record->imported;
       $this->config = unserialize($record->config);
       if (!empty($record->state)) {

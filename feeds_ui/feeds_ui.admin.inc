@@ -179,8 +179,7 @@ function feeds_ui_importer_machine_name_exists($id) {
     // Create is a reserved path for the add importer form.
     return TRUE;
   }
-  ctools_include('export');
-  if (ctools_export_load_object('feeds_importer', 'conditions', array('id' => $id))) {
+  if (feeds_load_importer_object('feeds_importer', 'conditions', array('id' => $id))) {
     return TRUE;
   }
 }
