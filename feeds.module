@@ -508,28 +508,6 @@ function feeds_views_api() {
 }
 
 /**
- * Implements hook_ctools_plugin_api().
- */
-function feeds_ctools_plugin_api($owner, $api) {
-  if ($owner == 'feeds' && $api == 'plugins') {
-    return array('version' => 1);
-  }
-}
-
-/**
- * Implements hook_ctools_plugin_type().
- */
-function feeds_ctools_plugin_type() {
-  return array(
-    'plugins' => array(
-      'cache' => TRUE,
-      'use hooks' => TRUE,
-      'classes' => array('handler'),
-    ),
-  );
-}
-
-/**
  * Implements hook_feeds_plugins().
  */
 function feeds_feeds_plugins() {
@@ -754,13 +732,13 @@ function feeds_system_info_alter(array &$info, $file, $type) {
 
   // Don't make Feeds require itself, otherwise you can't disable Feeds until
   // all importers are deleted.
-  if ($file->name === 'feeds' || !function_exists('ctools_include')) {
+  if ($file->name === 'feeds') {
     return;
   }
 
   // Get the plugins that belong to the current module.
   $module_plugins = array();
-  foreach (ctools_get_plugins('feeds', 'plugins') as $plugin_id => $plugin) {
+  foreach (feeds_get_plugins() as $plugin_id => $plugin) {
     if ($file->name === $plugin['module']) {
       $module_plugins[$plugin_id] = TRUE;
     }
@@ -867,17 +845,15 @@ function feeds_flush_caches() {
  */
 function feeds_importer_load_all($load_disabled = FALSE) {
   $feeds = array();
-  // This function can get called very early in install process through
-  // menu_router_rebuild(). Do not try to include CTools if not available.
-  if (function_exists('ctools_include')) {
-      $configs = feeds_load_importer_object();
-    foreach ($configs as $config) {
-      if (!empty($config->id) && ($load_disabled || empty($config->disabled))) {
-        $feeds[$config->id] = feeds_importer($config->id);
-      }
+
+  $configs = feeds_load_importer_object();
+  foreach ($configs as $config) {
+    if (!empty($config->id) && ($load_disabled || empty($config->disabled))) {
+      $feeds[$config->id] = feeds_importer($config->id);
     }
-    uasort($feeds, 'feeds_importer_name_sort');
   }
+  uasort($feeds, 'feeds_importer_name_sort');
+
   return $feeds;
 }
 
@@ -950,6 +926,7 @@ function feeds_cache_clear($rebuild_menu = TRUE) {
   cache_clear_all('_feeds_importer_digest', 'cache');
   backdrop_static_reset('_feeds_importer_digest');
   cache_clear_all('plugins:feeds:plugins', 'cache');
+  // todo this doesnt exist
   feeds_load_importer_object_reset('feeds_importer');
   backdrop_static_reset('_node_types_build');
   $cache = &backdrop_static('backdrop_tools_export_load_object');

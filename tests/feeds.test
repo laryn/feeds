@@ -36,7 +36,6 @@ class FeedsWebTestCase extends BackdropWebTestCase {
     $modules[] = 'feeds';
     $modules[] = 'feeds_ui';
     $modules[] = 'feeds_tests';
-    $modules[] = 'ctools';
     $modules[] = 'job_scheduler';
     $modules = array_unique($modules);
     parent::setUp($modules);

@@ -21,7 +21,7 @@ class CommonSyndicationParserTestCase extends BackdropWebTestCase {
   }
 
   public function setUp() {
-    parent::setUp(array('feeds', 'feeds_ui', 'ctools', 'job_scheduler'));
+    parent::setUp(array('feeds', 'feeds_ui', 'job_scheduler'));
     feeds_include_library('common_syndication_parser.inc', 'common_syndication_parser');
   }
 

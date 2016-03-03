@@ -81,8 +81,6 @@ abstract class FeedsPlugin extends FeedsConfigurable implements FeedsSourceInter
    *
    * @return array
    *   The plugin definition array.
-   *
-   * @see ctools_get_plugins()
    */
   public function pluginDefinition() {
     return $this->pluginDefinition;
@@ -179,7 +177,7 @@ abstract class FeedsPlugin extends FeedsConfigurable implements FeedsSourceInter
    * Get all available plugins.
    */
   public static function all() {
-      $plugins = ctools_get_plugins('feeds', 'plugins');
+    $plugins = feeds_get_plugins();
 
     $result = array();
     foreach ($plugins as $key => $info) {
@@ -207,7 +205,7 @@ abstract class FeedsPlugin extends FeedsConfigurable implements FeedsSourceInter
    *   FALSE otherwise.
    */
   public static function child($plugin_key, $parent_plugin) {
-      $plugins = ctools_get_plugins('feeds', 'plugins');
+    $plugins = feeds_get_plugins();
     $info = $plugins[$plugin_key];
 
     if (empty($info['handler']['parent'])) {

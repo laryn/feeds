@@ -19,21 +19,8 @@
  */
 
 /**
- * Example of a CTools plugin hook that needs to be implemented to make
- * hook_feeds_plugins() discoverable by CTools and Feeds. The hook specifies
- * that the hook_feeds_plugins() returns Feeds Plugin API version 1 style
- * plugins.
- */
-function hook_ctools_plugin_api($owner, $api) {
-  if ($owner == 'feeds' && $api == 'plugins') {
-    return array('version' => 1);
-  }
-}
-
-/**
  * A hook_feeds_plugins() declares available Fetcher, Parser or Processor
- * plugins to Feeds. For an example look at feeds_feeds_plugin(). For exposing
- * this hook hook_ctools_plugin_api() MUST be implemented, too.
+ * plugins to Feeds. For an example look at feeds_feeds_plugin().
  *
  * @see feeds_feeds_plugin()
  */

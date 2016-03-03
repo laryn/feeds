@@ -645,8 +645,6 @@ class FeedsSource extends FeedsConfigurable {
 
   /**
    * Load configuration and unpack.
-   *
-   * @todo Patch CTools to move constants from export.inc to ctools.module.
    */
   public function load() {
     if ($record = db_query("SELECT imported, config, state, fetcher_result FROM {feeds_source} WHERE id = :id AND feed_nid = :nid", array(':id' => $this->id, ':nid' => $this->feed_nid))->fetchObject()) {
