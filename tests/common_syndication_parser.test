@@ -5,6 +5,8 @@
  * Tests for the common syndication parser.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test cases for common syndication parser library.
  *
