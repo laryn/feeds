@@ -1,6 +1,7 @@
 name = Feeds News
 description = A news aggregator built with feeds, creates nodes from imported feed items. With OPML import.
-core = 7.x
+backdrop = 1.x
+type = module
 package = Feeds
 dependencies[] = features
 dependencies[] = feeds

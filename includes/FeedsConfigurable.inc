@@ -29,8 +29,6 @@ abstract class FeedsConfigurable {
   protected $id;
 
   /*
-  CTools export type of this object.
-
   @todo Should live in FeedsImporter. Not all child classes
   of FeedsConfigurable are exportable. Same goes for $disabled.
 
@@ -43,7 +41,7 @@ abstract class FeedsConfigurable {
   protected $export_type;
 
   /**
-   * CTools export enabled status of this object.
+   * Status of this object.
    */
   protected $disabled;
 

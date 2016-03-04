@@ -2,7 +2,7 @@
 
 /**
  * @file
- * CTools plugins declarations.
+ * Feeds plugins declarations.
  */
 
 /**

@@ -209,7 +209,7 @@ function feeds_batch($method, $importer_id, $feed_nid = 0, &$context) {
  *   An list of importers that need rescheduling.
  */
 function feeds_reschedule($importer_id = NULL) {
-  $reschedule = config_get('feeds.settings', 'feeds_reschedule')
+  $reschedule = config_get('feeds.settings', 'feeds_reschedule');
 
   if ($importer_id === TRUE || $importer_id === FALSE) {
     $reschedule = $importer_id;
@@ -816,7 +816,7 @@ function _feeds_feeds_processor_targets_alter(array &$targets, $entity_type, $bu
 function feeds_flush_caches() {
   // The update to add the table needs to have run. Taken from
   // https://www.drupal.org/node/2511858
-  include_once BACKDROP_ROOT . '/includes/install.inc';
+  include_once BACKDROP_ROOT . '/core/includes/install.inc';
 
   if (backdrop_get_installed_schema_version('feeds') >= 7212) {
     return array('cache_feeds_http');
@@ -845,14 +845,16 @@ function feeds_flush_caches() {
  */
 function feeds_importer_load_all($load_disabled = FALSE) {
   $feeds = array();
-
   $configs = feeds_load_importer_object();
-  foreach ($configs as $config) {
-    if (!empty($config->id) && ($load_disabled || empty($config->disabled))) {
-      $feeds[$config->id] = feeds_importer($config->id);
+
+  if ($configs) {
+    foreach ($configs as $config) {
+      if (!empty($config->id) && ($load_disabled || empty($config->disabled))) {
+        $feeds[$config->id] = feeds_importer($config->id);
+      }
     }
+    uasort($feeds, 'feeds_importer_name_sort');
   }
-  uasort($feeds, 'feeds_importer_name_sort');
 
   return $feeds;
 }
@@ -923,11 +925,10 @@ function _feeds_importer_digest() {
  * Resets importer caches. Call when enabling/disabling importers.
  */
 function feeds_cache_clear($rebuild_menu = TRUE) {
+  // todo fix this
   cache_clear_all('_feeds_importer_digest', 'cache');
   backdrop_static_reset('_feeds_importer_digest');
   cache_clear_all('plugins:feeds:plugins', 'cache');
-  // todo this doesnt exist
-  feeds_load_importer_object_reset('feeds_importer');
   backdrop_static_reset('_node_types_build');
   $cache = &backdrop_static('backdrop_tools_export_load_object');
   $cached_database = &backdrop_static('backdrop_tools_export_load_object_all');
@@ -935,7 +936,7 @@ function feeds_cache_clear($rebuild_menu = TRUE) {
   unset($cache[$table]);
   unset($cached_database[$table]);
   unset($cached_defaults[$table]);
- if ($rebuild_menu) {
+  if ($rebuild_menu) {
     menu_rebuild();
   }
 }
@@ -1082,7 +1083,7 @@ function feeds_source($importer_id, $feed_nid = 0) {
 function feeds_plugin($plugin, $id) {
 
   if (class_exists($plugin)) {
-    return FeedsPlugin::instance($plugin, $id, backdrop_tools_get_plugins('feeds', 'plugins', $plugin));
+    return FeedsPlugin::instance($plugin, $id, feeds_get_plugins($plugin));
   }
 
   $args = array('%plugin' => $plugin, '@id' => $id);
@@ -1213,32 +1214,6 @@ function feeds_include_simplepie() {
   }
 
   return FALSE;
-}
-
-/**
- * @deprecated
- *
- * Simplified backdrop_alter().
- *
- * - None of that 'multiple parameters by ref' crazyness.
- * - Don't use module_implements() to allow hot including on behalf
- *   implementations (see mappers/).
- *
- * @todo This needs to be removed and backdrop_alter() used. This is crazy dumb.
- */
-function feeds_alter($type, &$data) {
-  $args = array(&$data);
-  $additional_args = func_get_args();
-  array_shift($additional_args);
-  array_shift($additional_args);
-  $args = array_merge($args, $additional_args);
-
-  $hook = $type . '_alter';
-  foreach (module_list() as $module) {
-    if (module_hook($module, $hook)) {
-      call_user_func_array($module . '_' . $hook, $args);
-    }
-  }
 }
 
 /**
@@ -1395,36 +1370,24 @@ function feeds_file_download($uri) {
  * Feeds API version.
  */
 function feeds_api_version() {
-  $version = feeds_ctools_plugin_api('feeds', 'plugins');
-  return $version['version'];
+  return 1;
 }
 
-function feeds_load_importer_object($importer_id = NULL) {
-  $cache = &backdrop_static(__FUNCTION__);
-
+function feeds_load_importer_object($importer_id = NULL, $conditions = array()) {
   $table = 'feeds_importer';
 
-  $schema = backdrop_get_schema();
-  // Todo get rid of all this CTools cruft
-  $schema['export'] += array(
-  'key' => 'name', 
-  'key name' => 'Name', 
-  'object' => 'stdClass', 
-  'status' => 'default_' . $table, 
-  'default hook' => 'default_' . $table, 
-  'can disable' => TRUE, 
-  'identifier' => $table, 
-  'primary key' => !empty($schema['primary key']) ? $schema['primary key'][0] : '', 
-  'bulk export' => TRUE, 
-  'list callback' => "$schema[module]_{$table}_list", 
-  'to hook code callback' => "$schema[module]_{$table}_to_hook_code", 
-  'cache defaults' => FALSE, 
-  'default cache bin' => 'cache', 
-  'export type string' => 'type',
-  );
-  
+  $cache = &backdrop_static(__FUNCTION__);
+  $cache_table_exists = &backdrop_static(__FUNCTION__ . '_table_exists', array());
 
-  $export = $schema['export'];
+  if (!$cache_table_exists) {
+    $cache_table_exists = db_table_exists($table);
+  }
+
+  $schema = backdrop_get_schema($table, TRUE);
+
+  if (empty($schema) || !$cache_table_exists) {
+    return array();
+  }  
 
   // If fetching all we are finished.
   if (!$importer_id && $cache) {
@@ -1439,16 +1402,22 @@ function feeds_load_importer_object($importer_id = NULL) {
 
 
   // Build the query
-  $query = db_select($table, 't__0')->fields('t__0');
+  $query = db_select($table, 'q')->fields('q');
   $alias_count = 1;
 
 
   // If they passed in names, add them to the query.
   // todo, figure this out. Dont need this if we're just fetching all everytime
-  if ($type == 'names') {
-    $query->condition('id', $args, 'IN');
+  if ($importer_id) {
+    $query->condition('id', array($importer_id), 'IN');
   }
-
+  else if ($conditions) {
+    foreach ($conditions as $key => $value) {
+      if (isset($schema['fields'][$key])) {
+        $query->condition($key, $value);
+      }
+    }
+  }
   $result = $query->execute();
 
   $return = array();
@@ -1459,20 +1428,41 @@ function feeds_load_importer_object($importer_id = NULL) {
   // Unpack the results of the query onto objects and cache them.
   foreach ($result as $data) {
     $object = new stdClass;
+    $object->id = $data->id;
     $object->config = unserialize($data->config);
     $object->table = $table;
     $object->type = t('Normal');
     $object->export_type = EXPORT_IN_DATABASE;
 
     $cache[$object->id] = $object;
+
+    if ($conditions) {
+      $return[$object->id] = $object;
+    }
   }
 
   // Todo get rid of the DB table and do all this in config
-  $defaults = _feeds_importer_get_defaults($table, $export);
+  $defaults = _feeds_importer_get_defaults($table);
 
   if ($defaults) {
     foreach ($defaults as $object) {
-      if ($object->id != $importer_id)) {
+      if ($conditions) {
+        // if this does not match all of our conditions, skip it.
+        foreach ($conditions as $key => $value) {
+          if (!isset($object->$key)) {
+            continue 2;
+          }
+          if (is_array($value)) {
+            if (!in_array($object->$key, $value)) {
+              continue 2;
+            }
+          }
+          else if ($object->$key != $value) {
+            continue 2;
+          }
+        }
+      }
+      elseif ($object->id != $importer_id) {
         continue;
       }
 
@@ -1486,6 +1476,9 @@ function feeds_load_importer_object($importer_id = NULL) {
         $cache[$object->id]->type = t('Overridden');
         $cache[$object->id]->export_type |= EXPORT_IN_CODE;
         $cache[$object->id]->export_module = isset($object->export_module) ? $object->export_module : NULL;
+        if ($conditions) {
+          $return[$object->id] = $cache[$object->id];
+        }
       }
       else {
         $object->type = t('Default');
@@ -1494,49 +1487,36 @@ function feeds_load_importer_object($importer_id = NULL) {
         $object->table = $table;
 
         $cache[$object->id] = $object;
+        if ($conditions) {
+          $return[$object->id] = $object;
+        }
       }
     }
   }
 
   // If fetching all, we've done so and we are finished.
-  if ($type == 'all') {
+  if (!$importer_id) {
     $cached_database = TRUE;
     return $cache;
   }
 
-  if ($type == 'names') {
-    foreach ($args as $name) {
-      if (isset($cache[$name])) {
-        $return[$name] = $cache[$name];
-      }
-    }
-  }
-
-  // For conditions,
   return $return;
 }
 
-function _feeds_importer_get_defaults($table, $export) {
+function _feeds_importer_get_defaults($table) {
   $cache = &backdrop_static(__FUNCTION__, array());
 
   if (!isset($cache)) {
     $cache = array();
 
     $modules = module_implements('feeds_importer_default');
-
     foreach ($modules as $module) {
       $function = $module . '_feeds_importer_default';
       if (function_exists($function)) {
-        foreach ((array) $function($export) as $name => $object) {
+        foreach ((array) $function() as $name => $object) {
           // Record the module that provides this exportable.
           $object->export_module = $module;
-
-          // If version checking is enabled, ensure that the object can be used.
-          if (isset($object->api_version) && 
-              version_compare($object->api_version, $export['api']['minimum_version']) >= 0 && 
-              version_compare($object->api_version, $export['api']['current_version']) <= 0) {
-            $cache[$name] = $object;
-          }
+          $cache[$name] = $object;
         }
       }
     }

@@ -1,6 +1,7 @@
 name = Feeds Import
 description = An example of a node importer and a user importer.
-core = 7.x
+backdrop = 1.x
+type = module
 package = Feeds
 dependencies[] = feeds
 files[] = feeds_import.test

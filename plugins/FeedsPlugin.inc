@@ -156,8 +156,6 @@ abstract class FeedsPlugin extends FeedsConfigurable implements FeedsSourceInter
    *
    * @see FeedsNodeProcessor::map()
    * @see FeedsUserProcessor::map()
-   *
-   * @todo: Use CTools Plugin API.
    */
   public static function loadMappers() {
     static $loaded = FALSE;

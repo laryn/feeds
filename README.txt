@@ -32,8 +32,6 @@ Features
 Requirements
 ============
 
-- CTools 1.x
-  http://drupal.org/project/ctools
 - Job Scheduler
   http://drupal.org/project/job_scheduler
 - Backdrop 7.x
