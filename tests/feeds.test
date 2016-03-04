@@ -98,14 +98,14 @@ class FeedsWebTestCase extends BackdropWebTestCase {
       array(
         'type' => 'page',
         'name' => 'Basic page',
-        'node_options[status]' => 1,
-        'node_options[promote]' => 0,
+        'status_default[1]' => 0,
+        'promote_default' => 0,
       ),
       array(
-        'type' => 'article',
-        'name' => 'Article',
-        'node_options[status]' => 1,
-        'node_options[promote]' => 1,
+        'type' => 'post',
+        'name' => 'Post',
+        'status_default[1]' => 0,
+        'promote_default' => 1,
       ),
     );
     foreach ($types as $type) {
@@ -188,8 +188,8 @@ class FeedsWebTestCase extends BackdropWebTestCase {
     $this->assertPlugins($id, 'FeedsHTTPFetcher', 'FeedsSyndicationParser', 'FeedsNodeProcessor');
     // Per default attach to page content type.
     $this->setSettings($id, NULL, array('content_type' => 'page'));
-    // Per default attached to article content type.
-    $this->setSettings($id, 'FeedsNodeProcessor', array('bundle' => 'article'));
+    // Per default attached to post content type.
+    $this->setSettings($id, 'FeedsNodeProcessor', array('bundle' => 'post'));
   }
 
   /**
