@@ -368,18 +368,8 @@ function feeds_tests_feeds_after_parse(FeedsSource $source, FeedsParserResult $r
   }
 }
 
-/**
- * Helper class to ensure callbacks can be objects.
- */
-class FeedsTestsPreprocess {
-
-/**
- * Preprocess callback for test_target.
- *
- * @see feeds_tests_feeds_processor_targets()
- */
-  public static function callback(array $target, array &$mapping) {
-    $mapping['required_value'] = TRUE;
-  }
-
+function feeds_tests_autoload_info() {
+  return array(
+  'FeedsTestsPreprocess' => 'feeds_test.class.inc',
+  );
 }
