@@ -299,9 +299,6 @@ function feeds_ui_edit_page(FeedsImporter $importer, $active = 'help', $plugin_k
       break;
 
     case 'settings':
-      // todo states?
-      backdrop_add_js(backdrop_get_path('module', 'ctools') . '/js/dependent.js');
-      // ctools_include('dependent');
       if (empty($plugin_key)) {
         $active_container['title'] = t('Basic settings');
         $active_container['body'] = feeds_get_form($importer, 'configForm');
@@ -692,7 +689,7 @@ function feeds_ui_mapping_settings_form($form, $form_state, $i, $mapping, $targe
        'edit_settings' => $base_button + array(
           '#type' => 'image_button',
           '#name' => 'mapping_settings_edit_' . $i,
-          '#src' => 'misc/configure.png',
+          '#src' => 'core/misc/configure.png',
           '#attributes' => array('alt' => t('Edit')),
           '#op' => 'edit',
         ),
