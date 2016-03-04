@@ -5,6 +5,8 @@
  * Contains Feedsi18nNodeTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Tests importing nodes in a language.
  */

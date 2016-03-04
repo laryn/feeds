@@ -5,6 +5,8 @@
  * Tests for plugins/FeedsTermProcessor.inc
  */
 
+include_once 'feeds.test';
+
 /**
  * Test aggregating a feed as data records.
  */
@@ -197,7 +199,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
       $this->assertEqual($vocabulary1, $term->vocabulary_machine_name);
     }
     // Assert that the second term's parent is the first term.
-    $parents = taxonomy_get_parents($terms[2]->tid);
+    $parents = taxonomy_term_load_parents($terms[2]->tid);
     $message = format_string('The term @term is correctly linked to its parent.', array('@term' => $terms[2]->name));
     if (!empty($parents)) {
       $parent = current($parents);
@@ -223,7 +225,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
       $this->assertEqual($vocabulary2, $term->vocabulary_machine_name);
     }
     // Assert that the second term's parent is the first term.
-    $parents = taxonomy_get_parents($terms[4]->tid);
+    $parents = taxonomy_term_load_parents($terms[4]->tid);
     $message = format_string('The term @term is correctly linked to its parent.', array('@term' => $terms[4]->name));
     if (!empty($parents)) {
       $parent = current($parents);
@@ -311,7 +313,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
       $this->assertEqual($vocabulary1, $term->vocabulary_machine_name);
     }
     // Assert that the second term's parent is the first term.
-    $parents = taxonomy_get_parents($terms[2]->tid);
+    $parents = taxonomy_term_load_parents($terms[2]->tid);
     $message = format_string('The term @term is correctly linked to its parent.', array('@term' => $terms[2]->name));
     if (!empty($parents)) {
       $parent = current($parents);
@@ -337,7 +339,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
       $this->assertEqual($vocabulary2, $term->vocabulary_machine_name);
     }
     // Assert that the second term's parent is the first term.
-    $parents = taxonomy_get_parents($terms[4]->tid);
+    $parents = taxonomy_term_load_parents($terms[4]->tid);
     $message = format_string('The term @term is correctly linked to its parent.', array('@term' => $terms[4]->name));
     if (!empty($parents)) {
       $parent = current($parents);

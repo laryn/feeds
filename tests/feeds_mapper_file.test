@@ -5,6 +5,8 @@
  * Contains FeedsMapperFileTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test case for Filefield mapper mappers/filefield.inc.
  */

@@ -5,6 +5,8 @@
  * Contains FeedsMapperFieldTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test case for simple CCK field mapper mappers/content.inc.
  */

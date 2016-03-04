@@ -5,6 +5,8 @@
  * Contains FeedsMapperDateTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test case for CCK date field mapper mappers/date.inc.
  *

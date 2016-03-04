@@ -5,6 +5,8 @@
  * Contains FeedsMapperProfileTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test suite for profile mapper mappers/profile.inc.
  */

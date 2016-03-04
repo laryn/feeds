@@ -5,6 +5,8 @@
  * Tests for http_request.inc.
  */
 
+include_once 'feeds.test';
+
 /**
  * Tests for the http library.
  */

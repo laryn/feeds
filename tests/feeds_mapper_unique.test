@@ -5,6 +5,8 @@
  * Contains FeedsMapperUniqueTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Class for testing Feeds unique callbacks.
  */

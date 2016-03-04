@@ -5,6 +5,8 @@
  * Contains FeedsMapperLinkTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test case for CCK link mapper mappers/date.inc.
  */

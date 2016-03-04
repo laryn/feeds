@@ -5,6 +5,8 @@
  * Contains FeedsMapperListTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test case for List field mappers in mappers/list.inc
  */

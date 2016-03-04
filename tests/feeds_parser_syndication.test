@@ -5,6 +5,8 @@
  * Tests for plugins/FeedsSyndicationParser.inc.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test single feeds.
  */

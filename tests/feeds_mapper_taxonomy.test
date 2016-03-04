@@ -5,6 +5,8 @@
  * Contains FeedsMapperTaxonomyTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test case for taxonomy mapper mappers/taxonomy.inc.
  */

@@ -4,6 +4,8 @@
  * Result of encoding_{code}.csv file parsed by ParserCSV.inc
  */
 
+include_once 'feeds.test';
+
 // JSON is used here because it supports unicode literals. PHP does not.
 $json = <<<EOT
 [

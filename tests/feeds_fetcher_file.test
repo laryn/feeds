@@ -5,6 +5,8 @@
  * File fetcher tests.
  */
 
+include_once 'feeds.test';
+
 /**
  * File fetcher test class.
  */

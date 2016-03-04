@@ -5,6 +5,8 @@
  * Contains FeedsFileHTTPTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * HTTP fetcher test class.
  */

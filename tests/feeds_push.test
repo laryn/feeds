@@ -5,6 +5,8 @@
  * Contains FeedsPushTest.
  */
 
+include_once 'feeds.test';
+
 /**
  * Tests for PubSubHubbub support in feeds.
  */

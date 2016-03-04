@@ -5,6 +5,8 @@
  * Contains FeedsMapperPathTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test case for path alias mapper path.inc.
  */

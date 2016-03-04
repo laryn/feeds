@@ -5,6 +5,8 @@
  * Tests for FeedsDateTime class.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test FeedsDateTime class.
  *

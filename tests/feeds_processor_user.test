@@ -5,6 +5,8 @@
  * Tests for plugins/FeedsUserProcessor.inc
  */
 
+include_once 'feeds.test';
+
 /**
  * Test aggregating a feed as data records.
  */

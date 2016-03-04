@@ -5,6 +5,8 @@
  * Contains FeedsMapperTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Helper class with auxiliary functions for feeds mapper module tests.
  */

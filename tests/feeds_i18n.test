@@ -5,6 +5,8 @@
  * Contains Feedsi18nTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Tests importing data in a language.
  */

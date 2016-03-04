@@ -5,6 +5,8 @@
  * Contains FeedsMapperConfigTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test cases for Feeds mapping configuration form.
  */

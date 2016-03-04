@@ -5,6 +5,8 @@
  * Contains FeedsMapperNodeSummaryTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test case for mapping to node summary.
  */

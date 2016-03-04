@@ -5,6 +5,8 @@
  * Tests for plugins/FeedsNodeProcessor.inc.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test aggregating a feed as node items.
  */

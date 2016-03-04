@@ -4,6 +4,8 @@
  * Result of nodes.csv file parsed by ParserCSV.inc
  */
 
+include_once 'feeds.test';
+
 $control_result = array (
   0 =>
   array (

@@ -5,6 +5,8 @@
  * Contains FeedsMapperMultilingualFieldsTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Tests field mapping with multiple languages.
  */

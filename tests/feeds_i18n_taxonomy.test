@@ -5,6 +5,8 @@
  * Contains Feedsi18nTaxonomyTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Tests importing terms in a language.
  */

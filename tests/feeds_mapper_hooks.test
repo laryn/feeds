@@ -5,6 +5,8 @@
  * Contains FeedsMapperHookTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Test case for the various callbacks implemented for mappers.
  */

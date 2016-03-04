@@ -5,6 +5,8 @@
  * Contains FeedsCSVParserTestCase.
  */
 
+include_once 'feeds.test';
+
 /**
  * Tests the CSV parser using the UI.
  */
