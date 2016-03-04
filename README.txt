@@ -1,4 +1,4 @@
-
+Early work on Drupal Feeds module. CSV and node import works, but not fully tested. Use at own risk.
 
 "It feeds"
 
