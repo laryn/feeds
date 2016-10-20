@@ -33,9 +33,7 @@ Requirements
 ============
 
 - Job Scheduler
-  http://drupal.org/project/job_scheduler
-- Backdrop 7.x
-  http://drupal.org/project/backdrop
+  https://github.com/backdrop-contrib/job_scheduler
 - PHP safe mode is not supported, depending on your Feeds Importer configuration
   safe mode may cause no problems though.
 
@@ -130,13 +128,6 @@ external library used at the moment is SimplePie.
 Libraries found in the libraries search path are preferred over libraries in
 feeds/libraries/.
 
-Transliteration support
-=======================
-
-If you plan to store files with Feeds - for instance when storing podcasts
-or images from syndication feeds - it is recommended to enable the
-Transliteration module to avoid issues with non-ASCII characters in file names.
-http://drupal.org/project/transliteration
 
 API Overview
 ============
