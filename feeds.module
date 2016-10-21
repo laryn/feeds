@@ -24,6 +24,20 @@ define('EXPORT_IN_CODE', 0x02);
  * @{
  */
 
+function feeds_config_info() {
+  $prefixes['feeds.feeds_importer'] = array(
+    'name_key' => 'id',
+    'label_key' => 'id',
+    'group' => t('Feeds importers'),
+  );
+
+  $prefixes['feeds.settings'] = array(
+    'label' => t('Feeds settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
 /**
  * Implements hook_hook_info().
  */
@@ -846,7 +860,6 @@ function feeds_flush_caches() {
 function feeds_importer_load_all($load_disabled = FALSE) {
   $feeds = array();
   $configs = feeds_load_importer_object();
-
   if ($configs) {
     foreach ($configs as $config) {
       if (!empty($config->id) && ($load_disabled || empty($config->disabled))) {
@@ -1373,112 +1386,54 @@ function feeds_api_version() {
   return 1;
 }
 
-function feeds_load_importer_object($importer_id = NULL, $conditions = array()) {
+function feeds_load_importer_object($importer_id = NULL) {
   $table = 'feeds_importer';
 
   $cache = &backdrop_static(__FUNCTION__);
-  $cache_table_exists = &backdrop_static(__FUNCTION__ . '_table_exists', array());
-
-  if (!$cache_table_exists) {
-    $cache_table_exists = db_table_exists($table);
-  }
-
-  $schema = backdrop_get_schema($table, TRUE);
-
-  if (empty($schema) || !$cache_table_exists) {
-    return array();
-  }  
 
   // If fetching all we are finished.
   if (!$importer_id && $cache) {
     return $cache;
   }
 
-
   // Don't load anything we've already cached.
   if (!empty($importer_id) && isset($cache[$importer_id])) {
     return $cache[$importer_id];
   }
 
-
-  // Build the query
-  $query = db_select($table, 'q')->fields('q');
-  $alias_count = 1;
-
-
-  // If they passed in names, add them to the query.
-  // todo, figure this out. Dont need this if we're just fetching all everytime
-  if ($importer_id) {
-    $query->condition('id', array($importer_id), 'IN');
+  $result = array();
+  $config_names = config_get_names_with_prefix('feeds.feeds_importer.');
+  foreach ($config_names as $config_file) {
+    $config = config($config_file);
+    $data = $config->get();
+    $result[$data['id']] = $data;
   }
-  else if ($conditions) {
-    foreach ($conditions as $key => $value) {
-      if (isset($schema['fields'][$key])) {
-        $query->condition($key, $value);
-      }
-    }
-  }
-  $result = $query->execute();
 
-  $return = array();
-  $conditions = array();
-  $query_args = array();
-  $status = array();
 
   // Unpack the results of the query onto objects and cache them.
   foreach ($result as $data) {
     $object = new stdClass;
-    $object->id = $data->id;
-    $object->config = unserialize($data->config);
+    $object->id = $data['id'];
+    $object->config = $data['config'];
     $object->table = $table;
     $object->type = t('Normal');
     $object->export_type = EXPORT_IN_DATABASE;
 
     $cache[$object->id] = $object;
-
-    if ($conditions) {
-      $return[$object->id] = $object;
-    }
   }
 
-  // Todo get rid of the DB table and do all this in config
   $defaults = _feeds_importer_get_defaults($table);
 
   if ($defaults) {
     foreach ($defaults as $object) {
-      if ($conditions) {
-        // if this does not match all of our conditions, skip it.
-        foreach ($conditions as $key => $value) {
-          if (!isset($object->$key)) {
-            continue 2;
-          }
-          if (is_array($value)) {
-            if (!in_array($object->$key, $value)) {
-              continue 2;
-            }
-          }
-          else if ($object->$key != $value) {
-            continue 2;
-          }
-        }
-      }
-      elseif ($object->id != $importer_id) {
+      if ($object->id != $importer_id) {
         continue;
-      }
-
-      // Determine if default object is enabled or disabled.
-      // Todo figure this status business
-      if (isset($status[$object->id])) {
-        $object->disabled = $status[$object->id];
       }
 
       if (!empty($cache[$object->id])) {
         $cache[$object->id]->type = t('Overridden');
         $cache[$object->id]->export_type |= EXPORT_IN_CODE;
         $cache[$object->id]->export_module = isset($object->export_module) ? $object->export_module : NULL;
-        if ($conditions) {
-          $return[$object->id] = $cache[$object->id];
-        }
       }
       else {
         $object->type = t('Default');
@@ -1487,20 +1442,15 @@ function feeds_load_importer_object($importer_id = NULL, $conditions = array()) 
         $object->table = $table;
 
         $cache[$object->id] = $object;
-        if ($conditions) {
-          $return[$object->id] = $object;
-        }
       }
     }
   }
-
   // If fetching all, we've done so and we are finished.
   if (!$importer_id) {
-    $cached_database = TRUE;
     return $cache;
   }
 
-  return $return;
+  return !empty($cache[$importer_id]) ? $cache[$importer_id] : NULL;
 }
 
 function _feeds_importer_get_defaults($table) {

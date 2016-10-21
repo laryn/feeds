@@ -179,7 +179,7 @@ function feeds_ui_importer_machine_name_exists($id) {
     // Create is a reserved path for the add importer form.
     return TRUE;
   }
-  if (feeds_load_importer_object(NULL, array('id' => $id))) {
+  if (feeds_load_importer_object($id)) {
     return TRUE;
   }
 }

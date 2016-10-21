@@ -81,27 +81,26 @@ class FeedsImporter extends FeedsConfigurable {
     $save->id = $this->id;
     $save->config = $this->getConfig();
 
-    if ($config = db_query("SELECT config FROM {feeds_importer} WHERE id = :id", array(':id' => $this->id))->fetchField()) {
-      backdrop_write_record('feeds_importer', $save, 'id');
+    if ($config = config_get('feeds.feeds_importer.' . $this->id, 'config')) {
       // Only rebuild menu if content_type has changed. Don't worry about
       // rebuilding menus when creating a new importer since it will default
       // to the standalone page.
-      $config = unserialize($config);
       if ($config['content_type'] != $save->config['content_type']) {
         config_set('feeds.settings', 'menu_rebuild_needed', TRUE);
       }
     }
-    else {
-      backdrop_write_record('feeds_importer', $save);
-    }
+
+    $data = (array) $save;
+    config('feeds.feeds_importer.' . $this->id)
+      ->setData($data)
+      ->save();
   }
 
   /**
    * Load configuration and unpack.
    */
   public function load() {
-      if ($config = feeds_load_importer_object(NULL, array('id' => $this->id))) {
-      $config = array_shift($config);
+      if ($config = feeds_load_importer_object($this->id)) {
       $this->export_type = $config->export_type;
       $this->disabled = isset($config->disabled) ? $config->disabled : FALSE;
       $this->config = $config->config;
@@ -117,10 +116,8 @@ class FeedsImporter extends FeedsConfigurable {
    * configuration itself.
    */
   public function delete() {
-    db_delete('feeds_importer')
-      ->condition('id', $this->id)
-      ->execute();
-
+    config('feeds.feeds_importer.' . $this->id)->delete();
+    
     feeds_reschedule($this->id);
   }
 
