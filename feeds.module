@@ -1494,7 +1494,7 @@ function feeds_autoload_info() {
   'FeedsSource' => 'includes/FeedsSource.inc',
   'FeedsSourceInterface' => 'includes/FeedsSource.inc',
   'HRCurlException' => 'libraries/http_request.inc',
-  'FeedsCSVParser' => 'includes/FeedsCSVParser.inc',
+  'FeedsCSVParser' => 'plugins/FeedsCSVParser.inc',
   'FeedsResult' => 'plugins/FeedsPlugin.inc',
   'FeedsFetcherResult' => 'plugins/FeedsFetcher.inc',
   'FeedsFetcher' => 'plugins/FeedsFetcher.inc',

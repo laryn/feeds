@@ -61,7 +61,6 @@ class FeedsUserProcessor extends FeedsProcessor {
    */
   protected function entityValidate($account) {
     parent::entityValidate($account);
-
     if (empty($account->name) || empty($account->mail) || !valid_email_address($account->mail)) {
       throw new FeedsValidationException(t('User name missing or email not valid.'));
     }
