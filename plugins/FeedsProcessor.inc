@@ -93,7 +93,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
    *   A new entity object.
    */
   protected function newEntity(FeedsSource $source) {
-    $entity = entity_create('node', array());
+    $entity = entity_create($this->entityType(), array());
 
     $info = $this->entityInfo();
     if (!empty($info['entity keys']['language'])) {

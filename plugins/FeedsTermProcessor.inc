@@ -32,8 +32,9 @@ class FeedsTermProcessor extends FeedsProcessor {
   protected function newEntity(FeedsSource $source) {
     $vocabulary = $this->vocabulary();
     $term = parent::newEntity($source);
-    $term->vid = $vocabulary->vid;
-    $term->vocabulary_machine_name = $vocabulary->machine_name;
+    $term->vocabulary = $vocabulary->machine_name;
+    $term->format = 'filtered_html';
+    $term->description = NULL;
 
     return $term;
   }
@@ -72,9 +73,11 @@ class FeedsTermProcessor extends FeedsProcessor {
    */
   protected function entitySave($term) {
     if (isset($term->parent)) {
-      if (is_array($term->parent) && count($term->parent) == 1) {
-        $term->parent = reset($term->parent);
-      }
+      // Leaving in case needs review; this prevents imports.
+      
+      // if (is_array($term->parent) && count($term->parent) == 1) {
+        // $term->parent = reset($term->parent);
+      // }
       if (isset($term->tid) && ($term->parent == $term->tid || (is_array($term->parent) && in_array($term->tid, $term->parent)))) {
         throw new FeedsValidationException(t("A term can't be its own child. GUID:@guid", array('@guid' => $term->feeds_item->guid)));
       }
