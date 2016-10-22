@@ -147,7 +147,7 @@ class FeedsFileFetcher extends FeedsFetcher {
         watchdog('feeds', 'The upload directory %directory required by a feed could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', array('%directory' => $feed_dir));
       }
       // Validate and save uploaded file.
-      elseif ($file = file_save_upload('feeds', array('file_validate_extensions' => array(0 => $this->config['allowed_extensions'])), $feed_dir)) {
+      elseif ($file = file_save_upload('feeds_FeedsFileFetcher_upload', array('file_validate_extensions' => array(0 => $this->config['allowed_extensions'])), $feed_dir)) {
         $values['source'] = $file->uri;
         $values['file'] = $file;
       }
@@ -317,7 +317,7 @@ class FeedsFileFetcher extends FeedsFetcher {
   protected function deleteFile($fid, $feed_nid) {
     if ($file = file_load($fid)) {
       file_usage_delete($file, 'feeds', get_class($this), $feed_nid);
-      return file_delete($file);
+      return file_delete($fid);
     }
     return FALSE;
   }
