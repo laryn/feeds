@@ -128,7 +128,13 @@ abstract class FeedsProcessor extends FeedsPlugin {
       $args = array(':entity_id' => $entity_id);
       $table = db_escape_table($info['base table']);
       $key = db_escape_field($info['entity keys']['id']);
-      $entity = db_query("SELECT * FROM {" . $table . "} WHERE $key = :entity_id", $args)->fetchObject();
+      $entity_data = db_query("SELECT * FROM {" . $table . "} WHERE $key = :entity_id", $args)->fetchObject();
+      $entity = entity_create($this->entityType(), array());
+      foreach ($entity as $key => $data) {
+        if (isset($entity_data->$key)) {
+          $entity->$key = $entity_data->$key;
+        }
+      }
     }
 
     if ($entity && !empty($info['entity keys']['language'])) {

@@ -97,14 +97,14 @@ class FeedsWebTestCase extends BackdropWebTestCase {
     $types = array(
       array(
         'type' => 'page',
-        'name' => 'Basic page',
-        'status_default[1]' => 0,
+        'name' => 'Page',
+        'status_default' => 0,
         'promote_default' => 0,
       ),
       array(
         'type' => 'post',
         'name' => 'Post',
-        'status_default[1]' => 0,
+        'status_default' => 0,
         'promote_default' => 1,
       ),
     );
@@ -209,7 +209,7 @@ class FeedsWebTestCase extends BackdropWebTestCase {
       $this->backdropPost("admin/structure/feeds/$id/$type", $edit, 'Save');
 
       // Assert actual configuration.
-      $config = unserialize(db_query("SELECT config FROM {feeds_importer} WHERE id = :id", array(':id' => $id))->fetchField());
+      $config = config_get('feeds.feeds_importer.' . $id, 'config');
       $this->assertEqual($config[$type]['plugin_key'], $plugin_key, 'Verified correct ' . $type . ' (' . $plugin_key . ').');
     }
   }
@@ -248,11 +248,7 @@ class FeedsWebTestCase extends BackdropWebTestCase {
 
     // If content type not given, retrieve it.
     if (!$content_type) {
-      $result= db_select('feeds_importer', 'f')
-        ->condition('f.id', $id, '=')
-        ->fields('f', array('config'))
-        ->execute();
-      $config = unserialize($result->fetchField());
+      $config = config_get('feeds.feeds_importer.' . $id, 'config');
       $content_type = $config['content_type'];
       $this->assertFalse(empty($content_type), 'Valid content type found: ' . $content_type);
     }
@@ -362,7 +358,7 @@ class FeedsWebTestCase extends BackdropWebTestCase {
 
     $this->assertTrue(file_exists($file), 'Source file exists');
     $edit = array(
-      'files[feeds]' => $file,
+      'files[feeds_FeedsFileFetcher_upload]' => $file,
     );
     $this->backdropPost('import/' . $id, $edit, 'Import');
   }
@@ -377,7 +373,7 @@ class FeedsWebTestCase extends BackdropWebTestCase {
    */
   public function assertPlugins($id, $fetcher, $parser, $processor) {
     // Assert actual configuration.
-    $config = unserialize(db_query("SELECT config FROM {feeds_importer} WHERE id = :id", array(':id' => $id))->fetchField());
+    $config = config_get('feeds.feeds_importer.' . $id, 'config');
 
     $this->assertEqual($config['fetcher']['plugin_key'], $fetcher, 'Correct fetcher');
     $this->assertEqual($config['parser']['plugin_key'], $parser, 'Correct parser');
@@ -521,9 +517,7 @@ class FeedsWebTestCase extends BackdropWebTestCase {
    *   FALSE if the importer has no mappings, or an an array of mappings.
    */
   public function getCurrentMappings($id) {
-    $config = db_query("SELECT config FROM {feeds_importer} WHERE id = :id", array(':id' => $id))->fetchField();
-
-    $config = unserialize($config);
+    $config = config_get('feeds.feeds_importer.' . $id, 'config');
 
     // We are very specific here. 'mappings' can either be an array or not
     // exist.

@@ -46,9 +46,9 @@ class FeedsTermProcessor extends FeedsProcessor {
     $entity = parent::entityLoad($source, $entity_id);
 
     // Avoid missing bundle errors when term has been loaded directly from db.
-    if (empty($entity->vocabulary_machine_name) && !empty($entity->vid)) {
-      $vocabulary = taxonomy_vocabulary_load($entity->vid);
-      $entity->vocabulary_machine_name = ($vocabulary) ? $vocabulary->machine_name : NULL;
+    if (empty($entity->vocabulary) && !empty($entity->vocabulary)) {
+      $vocabulary = taxonomy_vocabulary_load($entity->vocabulary);
+      $entity->vocabulary = ($vocabulary) ? $vocabulary->machine_name : NULL;
     }
 
     return $entity;
@@ -112,10 +112,10 @@ class FeedsTermProcessor extends FeedsProcessor {
     switch ($target_element) {
       case 'parent':
         if (!empty($value)) {
-          $terms = taxonomy_get_term_by_name($value);
+          $terms = taxonomy_term_load_multiple_by_name($value);
           $parent_tid = '';
           foreach ($terms as $term) {
-            if ($term->vid == $target_term->vid) {
+            if ($term->vocabulary == $target_term->vocabulary) {
               $parent_tid = $term->tid;
             }
           }
@@ -141,7 +141,7 @@ class FeedsTermProcessor extends FeedsProcessor {
         if (!empty($term_ids)) {
           $terms = entity_load($this->entityType(), $term_ids);
           foreach ($terms as $term) {
-            if ($term->vid == $target_term->vid) {
+            if ($term->vocabulary == $target_term->vocabulary) {
               $parent_tid = $term->tid;
               break;
             }
@@ -230,7 +230,7 @@ class FeedsTermProcessor extends FeedsProcessor {
     foreach ($this->uniqueTargets($source, $result) as $target => $value) {
       if ($target == 'name') {
         $vocabulary = $this->vocabulary();
-        if ($tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name AND vid = :vid", array(':name' => $value, ':vid' => $vocabulary->vid))->fetchField()) {
+        if ($tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name AND vocabulary = :vocabulary", array(':name' => $value, ':vocabulary' => $vocabulary->machine_name))->fetchField()) {
           return $tid;
         }
       }

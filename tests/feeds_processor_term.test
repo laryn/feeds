@@ -110,12 +110,9 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
     $this->addMappings('term_import', $mappings);
 
     // Force configuration to be invalid.
-    $config = unserialize(db_query("SELECT config FROM {feeds_importer} WHERE id = :id", array(':id' => 'term_import'))->fetchField());
+    $config = config_get('feeds.feeds_importer.term_import', 'config');
     $config['processor']['config']['bundle'] = 'does_not_exist';
-    db_update('feeds_importer')
-      ->fields(array('config' => serialize($config)))
-      ->condition('id', 'term_import')
-      ->execute();
+    $config = config_set('feeds.feeds_importer.term_import', 'config', $config);
 
     // Import and assert.
     $this->importFile('term_import', $this->absolutePath() . '/tests/feeds/users.csv');
@@ -196,7 +193,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
     $terms = entity_load('taxonomy_term', array_keys($values));
     foreach ($terms as $tid => $term) {
       $this->assertEqual($values[$tid], $term->name);
-      $this->assertEqual($vocabulary1, $term->vocabulary_machine_name);
+      $this->assertEqual($vocabulary1, $term->vocabulary);
     }
     // Assert that the second term's parent is the first term.
     $parents = taxonomy_term_load_parents($terms[2]->tid);
@@ -222,7 +219,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
     $terms = entity_load('taxonomy_term', array_keys($values));
     foreach ($terms as $tid => $term) {
       $this->assertEqual($values[$tid], $term->name);
-      $this->assertEqual($vocabulary2, $term->vocabulary_machine_name);
+      $this->assertEqual($vocabulary2, $term->vocabulary);
     }
     // Assert that the second term's parent is the first term.
     $parents = taxonomy_term_load_parents($terms[4]->tid);
@@ -310,7 +307,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
     $terms = entity_load('taxonomy_term', array_keys($values));
     foreach ($terms as $tid => $term) {
       $this->assertEqual($values[$tid], $term->name);
-      $this->assertEqual($vocabulary1, $term->vocabulary_machine_name);
+      $this->assertEqual($vocabulary1, $term->vocabulary);
     }
     // Assert that the second term's parent is the first term.
     $parents = taxonomy_term_load_parents($terms[2]->tid);
@@ -336,7 +333,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
     $terms = entity_load('taxonomy_term', array_keys($values));
     foreach ($terms as $tid => $term) {
       $this->assertEqual($values[$tid], $term->name);
-      $this->assertEqual($vocabulary2, $term->vocabulary_machine_name);
+      $this->assertEqual($vocabulary2, $term->vocabulary);
     }
     // Assert that the second term's parent is the first term.
     $parents = taxonomy_term_load_parents($terms[4]->tid);

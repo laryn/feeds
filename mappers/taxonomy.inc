@@ -45,7 +45,7 @@ function taxonomy_feeds_get_source(FeedsSource $source, FeedsParserResult $resul
     $vocabulary = array_shift($vocabularies);
     $result = array();
     foreach ($terms as $tid => $term) {
-      if ($term->vid == $vocabulary->vid) {
+      if ($term->vocabulary == $vocabulary->vocabulary) {
         $result[] = new FeedsTermElement($term);
       }
     }
@@ -103,7 +103,7 @@ function taxonomy_feeds_set_target(FeedsSource $source, $entity, $target, array 
   if (!isset($cache['allowed_vocabularies'][$target])) {
     foreach ($info['settings']['allowed_values'] as $tree) {
       if ($vocabulary = taxonomy_vocabulary_machine_name_load($tree['vocabulary'])) {
-        $cache['allowed_vocabularies'][$target][$vocabulary->vid] = $vocabulary->machine_name;
+        $cache['allowed_vocabularies'][$target][$vocabulary->vocabulary] = $vocabulary->machine_name;
       }
     }
   }
