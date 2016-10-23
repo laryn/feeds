@@ -81,9 +81,9 @@ class FeedsCSVtoUsersTest extends FeedsWebTestCase {
     $this->assertText('Morticia');
     $this->assertText('Fester');
     $this->assertText('Gomez');
-    $count = db_query("SELECT count(*) FROM {users_roles} WHERE rid = :rid", array(':rid' => $manager_rid))->fetchField();
+    $count = db_query("SELECT count(*) FROM {users_roles} WHERE role = :role", array(':role' => $manager_rid))->fetchField();
     $this->assertEqual($count, 3, t('All imported users were assigned the manager role.'));
-    $count = db_query("SELECT count(*) FROM {users_roles} WHERE rid = :rid", array(':rid' => $admin_rid))->fetchField();
+    $count = db_query("SELECT count(*) FROM {users_roles} WHERE role = :role", array(':role' => $admin_rid))->fetchField();
     $this->assertEqual($count, 0, t('No imported user was assigned the administrator role.'));
 
     // Run import again, verify no new users.
