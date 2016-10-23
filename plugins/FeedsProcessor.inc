@@ -228,7 +228,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
       return LANGUAGE_NONE;
     }
 
-    $languages = language_list('enabled');
+    $languages = language_list();
 
     return isset($languages[1][$this->config['language']]) ? $this->config['language'] : LANGUAGE_NONE;
   }
@@ -862,11 +862,15 @@ abstract class FeedsProcessor extends FeedsPlugin {
         '#value' => $this->entityType(),
       );
     }
-
-    if (module_exists('locale') && !empty($info['entity keys']['language'])) {
+    if (module_exists('locale') && !empty($info['translation']['locale'])) {
+      $languages = language_list(TRUE);
+      $language_options = array();
+      foreach ($languages as $langcode => $language) {
+        $language_options[$langcode] = $language->name;
+      }
       $form['language'] = array(
         '#type' => 'select',
-        '#options' => array(LANGUAGE_NONE => t('Language neutral')) + locale_language_list('name'),
+        '#options' => array(LANGUAGE_NONE => t('Language neutral')) + $language_options,
         '#title' => t('Language'),
         '#required' => TRUE,
         '#default_value' => $this->config['language'],

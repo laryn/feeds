@@ -34,12 +34,6 @@ description = TBD
 group = Feeds
 file = feeds_fetcher_http.test
 
-[Feedsi18nTestCase]
-name = Feedsi18nTestCase
-description = TBD
-group = Feeds
-file = feeds_i18n.test
-
 [Feedsi18nNodeTestCase]
 name = Feedsi18nNodeTestCase
 description = TBD
@@ -51,12 +45,6 @@ name = Feedsi18nTaxonomyTestCase
 description = TBD
 group = Feeds
 file = feeds_i18n_taxonomy.test
-
-[FeedsMapperTestCase]
-name = FeedsMapperTestCase
-description = TBD
-group = Feeds
-file = feeds_mapper.test
 
 [FeedsMapperConfigTestCase]
 name = FeedsMapperConfigTestCase

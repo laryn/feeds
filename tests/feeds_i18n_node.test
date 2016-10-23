@@ -6,6 +6,7 @@
  */
 
 include_once 'feeds.test';
+include_once 'feeds_i18n.test';
 
 /**
  * Tests importing nodes in a language.
@@ -88,11 +89,11 @@ class Feedsi18nNodeTestCase extends Feedsi18nTestCase {
 
     // The first node should be Dutch.
     $node = node_load(1);
-    $this->assertEqual('nl', entity_language('node', $node), 'Item 1 has the Dutch language assigned.');
+    $this->assertEqual('nl', $node->langcode, 'Item 1 has the Dutch language assigned.');
 
     // The second node should be German.
     $node = node_load(2);
-    $this->assertEqual('de', entity_language('node', $node), 'Item 2 has the German language assigned.');
+    $this->assertEqual('de', $node->langcode, 'Item 2 has the German language assigned.');
   }
 
   /**
@@ -110,7 +111,7 @@ class Feedsi18nNodeTestCase extends Feedsi18nTestCase {
     // Assert that the content has no language assigned.
     for ($i = 1; $i <= 2; $i++) {
       $node = node_load($i);
-      $language = entity_language('node', $node);
+      $language = $node->langcode;
       $this->assertEqual(LANGUAGE_NONE, $language, format_string('The node is language neutral (actual: !language).', array('!language' => $language)));
     }
   }
@@ -131,7 +132,7 @@ class Feedsi18nNodeTestCase extends Feedsi18nTestCase {
     // Assert that the content has no language assigned.
     for ($i = 1; $i <= 2; $i++) {
       $node = node_load($i);
-      $language = entity_language('node', $node);
+      $language = $node->langcode;
       $this->assertEqual(LANGUAGE_NONE, $language, format_string('The node is language neutral (actual: !language).', array('!language' => $language)));
     }
   }
