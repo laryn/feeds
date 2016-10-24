@@ -139,7 +139,7 @@ class FeedsTermProcessor extends FeedsProcessor {
           ->condition('entity_type', $this->entityType());
         $term_ids = array_keys($query->condition('guid', $value)->execute()->fetchAllAssoc('entity_id'));
         if (!empty($term_ids)) {
-          $terms = entity_load($this->entityType(), $term_ids);
+          $terms = entity_load_multiple($this->entityType(), $term_ids);
           foreach ($terms as $term) {
             if ($term->vocabulary == $target_term->vocabulary) {
               $parent_tid = $term->tid;

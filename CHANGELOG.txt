@@ -428,7 +428,7 @@ Feeds 7.x 2.0 Alpha 6, 2012-10-10
 - Issue #1460282 by elliotttf, MegaChriz | jday: Fixed Call to undefined method
   FeedsMissingPlugin::entityType() .
 - Use entity type if entity label is not set.
-- Issue #1661014 by twistor | johnv: Fixed feeds_entity_load() called too often
+- Issue #1661014 by twistor | johnv: Fixed feeds_entity_load_multiple() called too often
   / is not cached.
 - Issue #1665450: Path alias target when using pathauto.
 - Fixed: feeds_mapper_file.test.

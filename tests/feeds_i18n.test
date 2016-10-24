@@ -66,7 +66,7 @@ class Feedsi18nTestCase extends FeedsMapperTestCase {
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');
 
     // Assert that the entity's language is in German.
-    $entities = entity_load($this->entityType, array(1, 2));
+    $entities = entity_load_multiple($this->entityType, array(1, 2));
     foreach ($entities as $entity) {
       $this->assertEqual('de', $entity->langcode);
     }
@@ -87,7 +87,7 @@ class Feedsi18nTestCase extends FeedsMapperTestCase {
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');
 
     // Assert that the entity's language is now in Dutch.
-    $entities = entity_load_multiple($this->entityType, array(1, 2));
+    $entities = entity_load_multiple_multiple($this->entityType, array(1, 2));
     foreach ($entities as $entity) {
       $this->assertEqual('nl', $entity->langcode);
     }
@@ -108,7 +108,7 @@ class Feedsi18nTestCase extends FeedsMapperTestCase {
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');
 
     // Assert that the entities have no language assigned.
-    $entities = entity_load($this->entityType, array(1, 2));
+    $entities = entity_load_multiple($this->entityType, array(1, 2));
     foreach ($entities as $entity) {
       $language = $entity->langcode;
       $this->assertEqual(LANGUAGE_NONE, $language, format_string('The entity is language neutral (actual: !language).', array('!language' => $language)));
@@ -127,7 +127,7 @@ class Feedsi18nTestCase extends FeedsMapperTestCase {
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');
 
     // Assert that the entities have no language assigned.
-    $entities = entity_load($this->entityType, array(1, 2));
+    $entities = entity_load_multiple($this->entityType, array(1, 2));
     foreach ($entities as $entity) {
       $language = $entity->langcode;
       $this->assertEqual(LANGUAGE_NONE, $language, format_string('The entity is language neutral (actual: !language).', array('!language' => $language)));

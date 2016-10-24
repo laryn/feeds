@@ -121,7 +121,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
     $info = $this->entityInfo();
 
     if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING) {
-      $entities = entity_load($this->entityType(), array($entity_id));
+      $entities = entity_load_multiple($this->entityType(), array($entity_id));
       $entity = reset($entities);
     }
     else {
@@ -158,7 +158,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
 
     // Ensure that a valid language is always set.
     $key = $info['entity keys']['language'];
-    $languages = language_list('enabled');
+    $languages = language_list(TRUE);
 
     if (empty($entity->$key) || !isset($languages[1][$entity->$key])) {
       $entity->$key = $this->entityLanguage();
@@ -945,7 +945,7 @@ abstract class FeedsProcessor extends FeedsPlugin {
     if (!isset($cache[$this->id])) {
       $mappings = $this->config['mappings'];
       $targets = $this->getCachedTargets();
-      $languages = language_list('enabled');
+      $languages = language_list(TRUE);
 
       foreach ($mappings as &$mapping) {
 

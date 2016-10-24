@@ -190,7 +190,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
     $this->assertText('Created 2 terms.');
 
     // Assert that two terms were created in the first vocabulary.
-    $terms = entity_load('taxonomy_term', array_keys($values));
+    $terms = entity_load_multiple('taxonomy_term', array_keys($values));
     foreach ($terms as $tid => $term) {
       $this->assertEqual($values[$tid], $term->name);
       $this->assertEqual($vocabulary1, $term->vocabulary);
@@ -216,7 +216,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
     $this->assertText('Created 2 terms.');
 
     // Assert that two terms were created in the second vocabulary.
-    $terms = entity_load('taxonomy_term', array_keys($values));
+    $terms = entity_load_multiple('taxonomy_term', array_keys($values));
     foreach ($terms as $tid => $term) {
       $this->assertEqual($values[$tid], $term->name);
       $this->assertEqual($vocabulary2, $term->vocabulary);
@@ -304,7 +304,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
     $this->assertText('Created 2 terms.');
 
     // Assert that two terms were created in the first vocabulary.
-    $terms = entity_load('taxonomy_term', array_keys($values));
+    $terms = entity_load_multiple('taxonomy_term', array_keys($values));
     foreach ($terms as $tid => $term) {
       $this->assertEqual($values[$tid], $term->name);
       $this->assertEqual($vocabulary1, $term->vocabulary);
@@ -330,7 +330,7 @@ class FeedsCSVtoTermsTest extends FeedsWebTestCase {
     $this->assertText('Created 2 terms.');
 
     // Assert that two terms were created in the second vocabulary.
-    $terms = entity_load('taxonomy_term', array_keys($values));
+    $terms = entity_load_multiple('taxonomy_term', array_keys($values));
     foreach ($terms as $tid => $term) {
       $this->assertEqual($values[$tid], $term->name);
       $this->assertEqual($vocabulary2, $term->vocabulary);

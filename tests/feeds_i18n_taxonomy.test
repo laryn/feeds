@@ -92,7 +92,7 @@ class Feedsi18nTaxonomyTestCase extends Feedsi18nTestCase {
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');
 
     // Assert that the terms have no language assigned.
-    $entities = entity_load($this->entityType, array(1, 2));
+    $entities = entity_load_multiple($this->entityType, array(1, 2));
     foreach ($entities as $entity) {
       // Terms shouldn't have a language property.
       $this->assertFalse(isset($entity->language), 'The term does not have a language.');
@@ -113,7 +113,7 @@ class Feedsi18nTaxonomyTestCase extends Feedsi18nTestCase {
     $this->importFile('i18n', $this->absolutePath() . '/tests/feeds/content.csv');
 
     // Assert that the terms have no language assigned.
-    $entities = entity_load($this->entityType, array(1, 2));
+    $entities = entity_load_multiple($this->entityType, array(1, 2));
     foreach ($entities as $entity) {
       $this->assertFalse(isset($entity->language), 'The term does not have a language.');
     }
