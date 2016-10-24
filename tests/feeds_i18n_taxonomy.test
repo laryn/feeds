@@ -6,6 +6,7 @@
  */
 
 include_once 'feeds.test';
+include_once 'feeds_i18n.test';
 
 /**
  * Tests importing terms in a language.
@@ -29,6 +30,7 @@ class Feedsi18nTaxonomyTestCase extends Feedsi18nTestCase {
   }
 
   public function setUp($modules = array(), $permissions = array()) {
+    module_load_include('inc', 'feeds' , 'plugins/FeedsPlugin');
     $this->entityType = 'taxonomy_term';
     $this->processorName = 'FeedsTermProcessor';
 
