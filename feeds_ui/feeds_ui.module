@@ -62,10 +62,8 @@ function feeds_ui_menu() {
   );
   $items['admin/structure/feeds/%feeds_importer/export'] = array(
     'title' => 'Export',
-    'page callback' => 'backdrop_get_form',
-    'page arguments' => array('feeds_ui_export_form', 3),
+    'page callback' => 'feeds_ui_export',
     'access arguments' => array('administer feeds'),
-    'file' => 'feeds_ui.admin.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );
@@ -142,4 +140,11 @@ function feeds_ui_admin_bar_map() {
  */
 function feeds_ui_importer_title($importer) {
   return t('@importer', array('@importer' => $importer->config['name']));
+}
+
+/**
+ * Redirect export task to Backdrop configuration management page.
+ */
+function feeds_ui_export() {
+  backdrop_goto('admin/config/development/configuration/single/export');
 }
