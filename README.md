@@ -1,16 +1,11 @@
-Early work on Drupal Feeds module. CSV and node import works, but not fully tested. Use at own risk.
-
-"It feeds"
-
-
 FEEDS
 =====
 
 An import and aggregation framework for Backdrop.
-http://drupal.org/project/feeds
+
 
 Features
-========
+--------
 
 - Pluggable import configurations consisting of fetchers (get data) parsers
   (read and transform data) and processors (create content on Backdrop).
@@ -30,7 +25,7 @@ Features
 - Optional libraries module support.
 
 Requirements
-============
+------------
 
 - Job Scheduler
   https://github.com/backdrop-contrib/job_scheduler
@@ -38,7 +33,7 @@ Requirements
   safe mode may cause no problems though.
 
 Installation
-============
+------------
 
 - Install Feeds, Feeds Admin UI.
 - To get started quick, install one or all of the following Feature modules:
@@ -47,7 +42,7 @@ Installation
 - Go to import/ to import data.
 
 SimplePie Installation
-======================
+----------------------
 
 - To install the SimplePie parser plugin, complete the following steps:
   1. Download SimplePie from http://simplepie.org/downloads. The recommended
@@ -55,17 +50,15 @@ SimplePie Installation
   2. Decompress the downloaded zip file.
   3. Rename the uncompressed folder to 'simplepie'.
      For example rename 'simplepie-simplepie-e9472a1' to 'simplepie'.
-  4. Move the folder to sites/all/libraries. The final directory structure
-     should be sites/all/libraries/simplepie.
+  4. Move the folder to /libraries. The final directory structure
+     should be /libraries/simplepie.
   5. Flush the Backdrop cache.
   6. The SimplePie parser should be available now in the list of parsers.
 
 Feature modules
-===============
+---------------
 
-Feeds ships with three feature modules that can be enabled on
-admin/build/modules or - if you are using Features - on admin/build/features.
-http://drupal.org/project/features
+Feeds ships with three feature modules that can be enabled.
 
 The purpose of these modules is to provide a quick start for using Feeds. You
 can either use them out of the box as they come or you can take them as samples
@@ -94,7 +87,7 @@ This feature is very similar to Feeds News. The big difference is that instead
 of aggregating a node for every item on a feed, it creates a database record
 in a single table, thus significantly improving performance. This approach
 especially starts to save resources when many items are being aggregated and
-expired (= deleted) on a site.
+expired (- deleted) on a site.
 
 - Feeds Import -
 
@@ -103,13 +96,13 @@ a node importer and a user importer that can be accessed under /import. Both
 accept CSV or TSV files as imports.
 
 PubSubHubbub support
-====================
+--------------------
 
 Feeds supports the PubSubHubbub publish/subscribe protocol. Follow these steps
 to set it up for your site.
 http://code.google.com/p/pubsubhubbub/
 
-- Go to admin/build/feeds and edit (override) the importer configuration you
+- Go to admin/structure/feeds and edit (override) the importer configuration you
   would like to use for PubSubHubbub.
 - Choose the HTTP Fetcher if it is not already selected.
 - On the HTTP Fetcher, click on 'settings' and check "Use PubSubHubbub".
@@ -119,10 +112,10 @@ http://code.google.com/p/pubsubhubbub/
   specifies.
 
 Libraries support
-=================
+-----------------
 
 If you are using Libraries module, you can place external libraries in the
-Libraries module's search path (for instance sites/all/libraries. The only
+Libraries module's search path (for instance /libraries. The only
 external library used at the moment is SimplePie.
 
 Libraries found in the libraries search path are preferred over libraries in
@@ -130,34 +123,34 @@ feeds/libraries/.
 
 
 API Overview
-============
+------------
 
 See "The developer's guide to Feeds":
 http://drupal.org/node/622700
 
 Testing
-=======
+-------
 
 See "The developer's guide to Feeds":
 http://drupal.org/node/622700
 
 Debugging
-=========
+---------
 
-Set the Backdrop variable 'feeds_debug' to TRUE (i. e. using drush). This will
+Set the Backdrop config variable 'feeds_debug' to TRUE (i. e. using drush). This will
 create a file /tmp/feeds_[my_site_location].log. Use "tail -f" on the command
 line to get a live view of debug output.
 
 Note: at the moment, only PubSubHubbub related actions are logged.
 
 Performance
-===========
+-----------
 
 See "The site builder's guide to Feeds":
 http://drupal.org/node/622698
 
 Hidden settings
-===============
+---------------
 
 Hidden settings are variables that you can define by adding them to the $conf
 array in your settings.php file.
@@ -205,7 +198,29 @@ Description: The extension mbstring is used to convert encodings during parsing.
              behavior when the extension is not available.
 
 Glossary
-========
+--------
 
 See "Feeds glossary":
 http://drupal.org/node/622710
+
+
+License
+-------
+
+This project is GPL v2 software. See the LICENSE.txt file in this directory for
+complete text.
+
+Maintainers
+-----------
+
+- Andy Shillingford (https://github.com/docwilmot/)
+
+Credits
+-------
+Drupal version currently maintained by: 
+
+https://www.drupal.org/u/MegaChriz
+https://www.drupal.org/u/twistor
+https://www.drupal.org/u/tristanoneil
+https://www.drupal.org/u/franz
+https://www.drupal.org/u/febbraro
