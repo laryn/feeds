@@ -160,11 +160,12 @@ function taxonomy_feeds_set_target(FeedsSource $source, $entity, $target, array 
             }
           }
           elseif ($mapping['autocreate'] && strlen($term)) {
-            $term = (object) array(
+            $term = entity_create('taxonomy_term', array(
               'name' => backdrop_substr($term, 0, 255),
               'vid' => key($cache['allowed_vocabularies'][$target]),
-              'vocabulary_machine_name' => reset($cache['allowed_vocabularies'][$target]),
-            );
+              'vocabulary' => reset($cache['allowed_vocabularies'][$target]),
+              'format' => 1
+            ));
             // Set language if the taxonomy is multilingual.
             if ($language !== LANGUAGE_NONE) {
               $info = entity_get_info('taxonomy_term');
