@@ -611,7 +611,7 @@ function feeds_update_1006() {
  */
 function feeds_update_1007() {
   $config = config('feeds.settings');
-  if (empty($config->get('user_agent'))) {
+  if ($config->get('user_agent') === NULL) {
     $config->set('user_agent', 'Backdrop (+https://backdropcms.org/)');
     $config->save();
   }
